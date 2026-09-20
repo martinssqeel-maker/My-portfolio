@@ -22,7 +22,7 @@ export default function Footer({ onOpenAdmin }) {
             </span>
             <span className="text-[#5b6270] hidden sm:inline">/</span>
             <span className="text-xs text-[#9ca3af]">
-              Martins Moses — Frontend Developer &amp; Practical Web Product Builder.
+              Martins Moses — Frontend Developer &amp; Web Product Builder.
             </span>
           </div>
 

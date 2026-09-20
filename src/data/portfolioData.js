@@ -1,69 +1,71 @@
 /**
  * Personal Portfolio Configuration for Martins Moses
- * 
- * Central configuration file representing Martins Moses' real projects,
- * verified skills, and practical SIWES training journey.
+ *
+ * Central configuration for professional positioning, real shipped products,
+ * and builder journey experience.
  */
 
 export const personalData = {
   name: "Martins Moses",
   shortName: "Martins",
-  handle: "martinssqeel-maker",
-  role: "Frontend Developer & Practical Web Product Builder",
-  status: "Open to software roles, SIWES continuation & collaborations",
+  handle: "Martinssqeel",
+  role: "Frontend Developer & Web Product Builder",
+  status: "Open to software roles, freelance work & collaborations",
   availableForHire: true,
   email: "martinssqeel@gmail.com",
   github: "https://github.com/martinssqeel-maker",
-  
+
   // Custom domain placeholder (unconfirmed - left editable for when custom domain is acquired)
-  // MANUAL ACTION REQUIRED: Set your custom domain once acquired e.g. "martinsmoses.com" or Vercel URL
   domain: "",
 
-  // MANUAL ACTION REQUIRED: Provide your real WhatsApp and social URLs if desired
   whatsapp: "", // e.g. "https://wa.me/234XXXXXXXXXX"
-  twitter: "",  // Optional: e.g. "https://x.com/yourhandle"
-  linkedin: "", // Optional: e.g. "https://linkedin.com/in/yourhandle"
-  
+  twitter: "",
+  linkedin: "",
+
   location: "Nigeria",
-  
+
   hero: {
-    eyebrow: "Frontend Development · Practical Web Applications · SIWES Trained",
-    headline: "Building practical web applications and accessible interfaces.",
+    eyebrow: "Frontend Development · Web Products · Client Delivery",
+    headline: "I build web products that work for real people.",
     description:
-      "I am a frontend developer and student who builds functional, real-world web tools—from VTU data portals to student marketplaces. I focus on responsive design, clean JavaScript/React architecture, and practical software that solves everyday problems.",
-    primaryCta: "Explore Real Projects",
+      "I am Martins Moses — a frontend developer who turns ideas into fully deployed, functional web products that real people use every day.",
+    primaryCta: "Explore Live Products",
     secondaryCta: "Get in Touch",
   },
 
   about: {
-    headline: "Grounded in practical building, not hype.",
-    lead: "I'm Martins Moses, a developer focused on building functional, responsive web products that solve tangible problems for real users.",
+    headline: "Grounded in shipping products, not hype.",
+    lead: "I am Martins Moses — a frontend developer who turns ideas into fully deployed, functional web products that real people use every day.",
     paragraphs: [
-      "My development journey is driven by practical implementation: writing clean HTML, CSS, and modern JavaScript, then advancing into component-driven React applications. I believe the best way to master software engineering is to build real applications that real people can use, such as Zapdata (a VTU/data-selling portal) and Campus Marketplace (a peer exchange for students).",
-      "Through structured academic study, self-directed building, and practical industrial training (SIWES), I have developed a disciplined approach to responsive layouts, cross-device compatibility, and version control with Git and VS Code. I focus on writing clean, readable code and continuously refining my capabilities."
+      "My work is driven by practical delivery: clean HTML, CSS, and modern JavaScript, then component-driven React applications that ship to production. I focus on products people actually use — from VTU and data-selling platforms to client e-commerce storefronts.",
+      "Through freelance client work and continuous self-directed building, I have developed a disciplined approach to responsive layouts, cross-device compatibility, and version control with Git. I write readable code, ship live URLs, and keep refining every release.",
     ],
     principles: [
       {
         number: "01",
         title: "Real-World Utility",
-        description: "Focusing on applications that solve actual day-to-day needs, such as mobile data recharging and campus student commerce."
+        description:
+          "Focusing on applications that solve actual day-to-day needs, such as mobile data recharging and client commerce storefronts.",
       },
       {
         number: "02",
         title: "Mobile-First for Every User",
-        description: "Engineering interfaces that load smoothly and respond gracefully on budget smartphones and fluctuating network speeds."
+        description:
+          "Engineering interfaces that load smoothly and respond gracefully on budget smartphones and fluctuating network speeds.",
       },
       {
         number: "03",
         title: "Clean Code & Modern Standards",
-        description: "Adhering to semantic HTML, modular CSS/Tailwind, and predictable React state management with clear organization."
+        description:
+          "Adhering to semantic HTML, modular CSS/Tailwind, and predictable React state management with clear organization.",
       },
       {
         number: "04",
-        title: "Rapid Continuous Learning",
-        description: "Pairing frontend craft in React and JavaScript with foundational scripting in Python and disciplined Git version control."
-      }
-    ]
+        title: "Ship, Learn, Iterate",
+        description:
+          "Pairing frontend craft in React and JavaScript with continuous delivery, live deployments, and disciplined Git version control.",
+      },
+    ],
   },
 
   skills: [
@@ -75,8 +77,8 @@ export const personalData = {
         { name: "CSS3", level: "Strong Working Knowledge", note: "Flexbox, CSS Grid, media queries, custom properties" },
         { name: "JavaScript (ES6+)", level: "Active Building", note: "DOM manipulation, event listeners, fetch/async, arrays & objects" },
         { name: "Tailwind CSS", level: "Working Knowledge", note: "Rapid utility styling, responsive layouts, consistent spacing" },
-        { name: "Responsive Web Design", level: "Strong Working Knowledge", note: "Mobile-first viewports, touch-friendly navigation" }
-      ]
+        { name: "Responsive Web Design", level: "Strong Working Knowledge", note: "Mobile-first viewports, touch-friendly navigation" },
+      ],
     },
     {
       category: "Frameworks & Client Architecture",
@@ -84,16 +86,16 @@ export const personalData = {
       items: [
         { name: "React", level: "Actively Building", note: "Functional components, useState, useEffect, props flow" },
         { name: "Vite", level: "Working Knowledge", note: "Fast build tooling, local dev server, module bundling" },
-        { name: "Web APIs & Fetch", level: "Working Knowledge", note: "Consuming JSON endpoints, handling loading & error states" }
-      ]
+        { name: "Web APIs & Fetch", level: "Working Knowledge", note: "Consuming JSON endpoints, handling loading & error states" },
+      ],
     },
     {
       category: "Programming & Foundations",
       description: "Core logic, scripting, and algorithmic problem-solving",
       items: [
         { name: "Python", level: "Learning & Practicing", note: "Core syntax, functions, basic data handling and scripts" },
-        { name: "Problem Solving & Logic", level: "Active Practice", note: "Conditionals, iterative loops, data formatting" }
-      ]
+        { name: "Problem Solving & Logic", level: "Active Practice", note: "Conditionals, iterative loops, data formatting" },
+      ],
     },
     {
       category: "Developer Tools & Environment",
@@ -102,140 +104,103 @@ export const personalData = {
         { name: "VS Code", level: "Primary IDE", note: "Extensions, debugging, integrated terminal, fast editing" },
         { name: "Git & GitHub", level: "Working Knowledge", note: "Repository tracking, commits, branches, pushing code" },
         { name: "Chrome DevTools", level: "Working Knowledge", note: "Inspecting elements, mobile emulation, console debugging" },
-        { name: "Command Line / Bash", level: "Working Knowledge", note: "CLI navigation, npm scripts, file operations" }
-      ]
-    }
+        { name: "Command Line / Bash", level: "Working Knowledge", note: "CLI navigation, npm scripts, file operations" },
+      ],
+    },
   ],
 
   projects: [
     {
       id: "zapdata",
       featured: true,
-      tag: "Flagship Real-World Project",
-      title: "Zapdata — VTU & Airtime/Data-Selling Web Application",
-      tagline: "A streamlined web platform for purchasing mobile data bundles and airtime across Nigerian telecom networks.",
+      tag: "Live Product",
+      title: "Zapdata — VTU & Data Selling Platform",
+      tagline:
+        "A live web platform for purchasing mobile data bundles and airtime across Nigerian telecom networks.",
       role: "Frontend Developer & Creator",
-      period: "Active Project",
+      period: "Live Product",
       problem:
-        "Purchasing mobile data through slow USSD codes or bloated banking apps is cumbersome and frequently leads to failed transactions. Students and everyday users need a fast, transparent way to buy affordable SME and direct data bundles with instant feedback.",
+        "Purchasing mobile data through slow USSD codes or bloated banking apps is cumbersome and frequently leads to failed transactions. Everyday users need a fast, transparent way to buy affordable SME and direct data bundles with instant feedback.",
       solution:
-        "Engineered Zapdata with a clean, responsive purchase interface. Implemented automatic network carrier detection based on phone number prefixes (MTN, Airtel, Glo, 9mobile), dynamic package selection, instant price calculation, and a seamless checkout experience.",
+        "Engineered Zapdata with a clean, responsive purchase interface. Implemented automatic network carrier detection based on phone number prefixes (MTN, Airtel, Glo, 9mobile), dynamic package selection, instant price calculation, and a seamless checkout experience — fully deployed for real users.",
       highlights: [
         "Automatic carrier prefix detection: instantly identifies MTN, Airtel, Glo, and 9mobile numbers",
         "Dynamic plan catalog: SME, Corporate, and Direct data bundles with real pricing and validity periods",
         "Mobile-first responsive checkout designed for quick one-handed phone use",
-        "Interactive wallet balance and simulated order confirmation feedback"
+        "Live production deployment serving real customers daily",
       ],
       technologies: ["React", "JavaScript (ES6+)", "Tailwind CSS", "HTML5 / CSS3", "LocalStorage API"],
-      liveUrl: "", // [MANUAL ACTION REQUIRED: Provide live hosted URL when deployed]
-      githubUrl: "", // [MANUAL ACTION REQUIRED: Confirm exact repo name when ready]
+      liveUrl: "https://www.zapdata.com.ng/",
+      githubUrl: "",
       hasLiveDemo: true,
       features: [
         { label: "Carrier Coverage", value: "MTN, Airtel, Glo, 9mobile" },
         { label: "Phone Carrier Detection", value: "Real-time prefix algorithm" },
-        { label: "Target Audience", value: "Students & mobile data consumers" }
-      ]
+        { label: "Status", value: "Live in production" },
+      ],
     },
     {
-      id: "campus-marketplace",
+      id: "suleman-fashion",
       featured: false,
-      tag: "Student Community Platform",
-      title: "Campus Marketplace — Student Peer-to-Peer Exchange",
-      tagline: "A localized marketplace enabling university students to buy, sell, and exchange textbooks, dorm essentials, and calculators.",
-      role: "Frontend Developer",
-      period: "Active Project",
+      tag: "Client Delivery",
+      title: "Suleman Fashion Store — E-Commerce Platform",
+      tagline:
+        "A fully deployed e-commerce storefront for a fashion brand, built end-to-end as freelance client work.",
+      role: "Frontend Developer — Freelance",
+      period: "Client Delivery",
       problem:
-        "University students constantly buy and sell textbooks, rechargeable fans, and calculators, but rely on chaotic WhatsApp class groups where listings quickly get buried and prices are inconsistent.",
+        "Independent fashion brands need a modern, conversion-ready web storefront to present collections, handle product browsing, and drive inquiries — without expensive SaaS lock-in.",
       solution:
-        "Built Campus Marketplace to provide an organized, searchable catalog of campus listings. Features category filtering, budget-friendly search, condition tags, hostel location markers, and a direct click-to-chat WhatsApp button with pre-populated message templates to contact student sellers instantly.",
+        "Delivered Suleman Fashion Store as a polished e-commerce interface with product catalog browsing, collection presentation, and a mobile-first shopping experience, deployed live for the client.",
       highlights: [
-        "Structured category browsing for Textbooks, Electronics, Dorm Gear, and Student Services",
-        "Campus location tags (Hostel blocks, Faculty quads, Campus gates)",
-        "Direct 'Chat Seller on WhatsApp' integration with pre-filled greeting message",
-        "Lightweight UI tailored for low-bandwidth campus network connections"
+        "Curated product catalog with collection-focused browsing",
+        "Mobile-first storefront optimized for conversion on phones",
+        "Clean visual hierarchy highlighting garments and brand identity",
+        "Fully live client delivery on Netlify",
       ],
-      technologies: ["React", "JavaScript", "Tailwind CSS", "Responsive Design"],
-      liveUrl: "", // [MANUAL ACTION REQUIRED: Provide live URL when hosted]
-      githubUrl: "", // [MANUAL ACTION REQUIRED: Confirm repo name when ready]
+      technologies: ["React", "HTML5", "CSS3", "JavaScript", "Netlify"],
+      liveUrl: "https://helpful-lebkuchen-2ce9af.netlify.app/",
+      githubUrl: "",
       hasLiveDemo: true,
       features: [
-        { label: "Primary Use Case", value: "Student textbooks & hostel gear" },
-        { label: "Seller Contact", value: "Direct WhatsApp click-to-chat" }
-      ]
+        { label: "Engagement Type", value: "Freelance client delivery" },
+        { label: "Deployment", value: "Live on Netlify" },
+      ],
     },
-    {
-      id: "fashion-web",
-      featured: false,
-      tag: "E-Commerce / Lookbook Interface",
-      title: "Fashion & Apparel Web Showcase",
-      tagline: "A modern lookbook and apparel catalog designed for bespoke fashion collections and streetwear brands.",
-      role: "Frontend Developer",
-      period: "Active Project",
-      problem:
-        "Independent Nigerian fashion designers and streetwear brands need a modern, visually striking web showcase to present lookbook collections, fabric details, and sizing specifications without paying expensive SaaS e-commerce fees.",
-      solution:
-        "Created an editorial lookbook interface featuring collection switching, item detail drawers, color swatches, and sizing selectors with direct inquiry avenues.",
-      highlights: [
-        "Curated lookbook gallery with collection filtering (Streetwear, Contemporary)",
-        "Interactive sizing and color palette selector",
-        "Visual hierarchy highlighting garment details and fabric specifications",
-        "Optimized image containers for smooth mobile scrolling"
-      ],
-      technologies: ["React", "HTML5", "CSS3", "JavaScript"],
-      liveUrl: "", // [MANUAL ACTION REQUIRED: Provide live URL when hosted]
-      githubUrl: "", // [MANUAL ACTION REQUIRED: Confirm repo name when ready]
-      hasLiveDemo: true,
-      features: [
-        { label: "Design Style", value: "Editorial & minimalist" },
-        { label: "Key Interaction", value: "Collection filtering & sizing" }
-      ]
-    }
   ],
 
   experience: [
     {
-      period: "Practical Industrial Training (SIWES)",
-      role: "Frontend Engineering Intern / SIWES Trainee",
-      organization: "[MANUAL ACTION REQUIRED: Your SIWES Company / IT Firm Name]",
-      institution: "[MANUAL ACTION REQUIRED: Your University / Polytechnic Name]",
+      period: "2024 — Present",
+      role: "Freelance Frontend Developer",
+      organization: "Independent Client & Product Work",
+      institution: null,
       location: "Nigeria",
       summary:
-        "Completed the Students Industrial Work Experience Scheme (SIWES) practical training, gaining direct hands-on experience working on real-world software tasks, user interface debugging, and collaborative development.",
+        "Delivering production frontend work for clients and personal products — from e-commerce storefronts to live VTU platforms — with a focus on responsive UI, clean React architecture, and shipped deployments.",
       contributions: [
-        "Built and maintained responsive web layouts using semantic HTML5, modern CSS3, and JavaScript.",
-        "Collaborated with senior developers to diagnose interface bugs and optimize viewport scaling for mobile devices.",
-        "Applied Git version control fundamentals (branching, commits, pull requests) to manage daily codebase changes.",
-        "Tested web pages across different mobile browsers to ensure consistent user experience under varying network speeds."
+        "Built and shipped Suleman Fashion Store, a live e-commerce storefront for a fashion client.",
+        "Created and maintain Zapdata, a production VTU and data-selling platform used by real customers.",
+        "Delivered mobile-first interfaces with semantic HTML, modern CSS/Tailwind, and React components.",
+        "Managed end-to-end delivery: design translation, implementation, deployment, and iteration.",
       ],
-      skillsApplied: ["HTML5", "CSS3", "JavaScript", "Git & GitHub", "Responsive Design", "Cross-Browser Testing"]
+      skillsApplied: ["React", "JavaScript", "Tailwind CSS", "HTML5", "CSS3", "Netlify", "Git & GitHub"],
     },
     {
-      period: "Practical Product Development",
-      role: "Independent Builder",
-      organization: "Personal Software Projects (Zapdata & Campus Marketplace)",
+      period: "2023 — Present",
+      role: "Self-Directed Developer",
+      organization: "Continuous Building & Technical Growth",
+      institution: null,
       location: "Nigeria",
       summary:
-        "Designed and implemented functional web applications from scratch, translating practical everyday user problems into working software products.",
+        "Building a strong technical foundation through continuous project work, deliberate practice, and shipping real products rather than tutorial-only learning.",
       contributions: [
-        "Architected Zapdata, implementing telecom carrier prefix auto-detection and data bundle selection.",
-        "Developed Campus Marketplace, structuring student category filters and direct WhatsApp seller communication.",
-        "Practiced clean component structuring in React and rapid layout development with Tailwind CSS."
+        "Practiced modern frontend fundamentals daily: HTML, CSS, JavaScript, and React.",
+        "Shipped multiple live products and prototypes to production hosting environments.",
+        "Strengthened Git/GitHub workflow, debugging with DevTools, and component-driven architecture.",
+        "Expanded problem-solving skills with Python scripting and algorithmic practice.",
       ],
-      skillsApplied: ["React", "JavaScript", "Tailwind CSS", "UI Layouts", "State Management"]
+      skillsApplied: ["React", "JavaScript", "Python", "VS Code", "Git & GitHub", "Chrome DevTools"],
     },
-    {
-      period: "Academic Study & Continuous Learning",
-      role: "Student & Self-Taught Developer",
-      organization: "Computer Science / Technical Studies",
-      location: "Nigeria",
-      summary:
-        "Building a solid academic and technical foundation in computational thinking, programming logic, and modern web development standards.",
-      contributions: [
-        "Practicing Python programming for logic building, scripts, and algorithmic problem-solving.",
-        "Studying software engineering fundamentals, database concepts, and internet protocols.",
-        "Consistently tracking learning projects and version control on GitHub using VS Code."
-      ],
-      skillsApplied: ["Python", "Algorithms & Logic", "Web Fundamentals", "VS Code", "GitHub"]
-    }
-  ]
+  ],
 };

@@ -377,7 +377,7 @@ export default function AdminDashboard({ user, onLogout, onExitDashboard }) {
             { id: 'messages', label: 'Inbox', icon: MessageSquare, badge: stats?.unreadMessages },
             { id: 'projects', label: 'Projects', icon: FolderKanban, badge: projects.length },
             { id: 'skills', label: 'Skills', icon: Wrench, badge: skills.length },
-            { id: 'experience', label: 'Experience', icon: Briefcase, badge: experience.length },
+            { id: 'experience', label: 'Experience & Journey', icon: Briefcase, badge: experience.length },
           ].map((item) => {
             const Icon = item.icon;
             const isActive = activeTab === item.id;
@@ -810,9 +810,9 @@ export default function AdminDashboard({ user, onLogout, onExitDashboard }) {
             <div className="space-y-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <h2 className="text-xl font-bold text-white tracking-tight">Experience &amp; SIWES</h2>
+                  <h2 className="text-xl font-bold text-white tracking-tight">Experience &amp; Journey</h2>
                   <p className="text-xs font-mono text-[#5b6270]">
-                    Field training, SIWES, and project journey records
+                    Freelance work, product shipping, and builder journey records
                   </p>
                 </div>
                 <button
@@ -1175,7 +1175,7 @@ export default function AdminDashboard({ user, onLogout, onExitDashboard }) {
           <div className="w-full max-w-xl rounded-2xl bg-[#0f1117] border border-[#222633] p-6 shadow-2xl max-h-[90vh] overflow-y-auto space-y-4">
             <div className="flex items-center justify-between pb-3 border-b border-[#1b1e28]">
               <h3 className="text-base font-bold text-white">
-                {editingExp ? 'Edit Experience' : 'Add Experience / Training Record'}
+                {editingExp ? 'Edit Experience' : 'Add Experience / Journey Record'}
               </h3>
               <button
                 type="button"
@@ -1193,7 +1193,7 @@ export default function AdminDashboard({ user, onLogout, onExitDashboard }) {
                   name="title"
                   required
                   defaultValue={editingExp?.title || ''}
-                  placeholder="Frontend Engineering Intern / SIWES Trainee"
+                  placeholder="Freelance Frontend Developer"
                   className="w-full px-3 py-2 rounded-lg bg-[#14161f] border border-[#202430] text-white text-sm"
                 />
               </div>
@@ -1210,11 +1210,11 @@ export default function AdminDashboard({ user, onLogout, onExitDashboard }) {
                   />
                 </div>
                 <div>
-                  <label className="block text-[#9ca3af] mb-1">Academic Institution</label>
+                  <label className="block text-[#9ca3af] mb-1">Institution / Context (optional)</label>
                   <input
                     name="institution"
                     defaultValue={editingExp?.institution || ''}
-                    placeholder="University Name"
+                    placeholder="Optional context"
                     className="w-full px-3 py-2 rounded-lg bg-[#14161f] border border-[#202430] text-white text-sm"
                   />
                 </div>

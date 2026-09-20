@@ -1,8 +1,18 @@
 import React, { useState } from 'react';
+import { motion } from 'framer-motion';
 import { personalData } from '../data/portfolioData';
 import { submitContactMessage } from '../services/api';
 import { Copy, Check, Send, MessageSquare, ArrowUpRight, AlertCircle, RefreshCw } from 'lucide-react';
 import { GithubIcon } from './Icons';
+
+const fadeUp = {
+  hidden: { opacity: 0, y: 28 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.55, ease: [0.22, 1, 0.36, 1] },
+  },
+};
 
 export default function Contact() {
   const [copied, setCopied] = useState(false);
@@ -48,23 +58,35 @@ export default function Contact() {
       <div className="max-w-6xl mx-auto px-5 sm:px-8">
         
         {/* Section Header */}
-        <div className="mb-16">
+        <motion.div
+          className="mb-16"
+          variants={fadeUp}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.35 }}
+        >
           <span className="font-mono text-xs uppercase tracking-wider text-blue-400 mb-2 block">
             05 / Direct Communication
           </span>
           <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-[#f4f5f8] max-w-2xl">
-            Let's start a conversation.
+            Let&apos;s start a conversation.
           </h2>
           <p className="mt-3 text-base sm:text-lg text-[#9ca3af] max-w-xl">
             Whether you are considering me for an engineering role, discussing a frontend
             challenge, or looking to collaborate, my inbox is always open.
           </p>
-        </div>
+        </motion.div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
           
           {/* Left Column: Direct Contact Info & Verification */}
-          <div className="lg:col-span-5 space-y-6">
+          <motion.div
+            className="lg:col-span-5 space-y-6"
+            variants={fadeUp}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.2 }}
+          >
             
             {/* Primary Email Card */}
             <div className="p-6 rounded-xl bg-[#101217] border border-[#1f222c] space-y-4">
@@ -146,10 +168,16 @@ export default function Contact() {
               Messages are stored securely in the portfolio database and answered within 24 hours.
             </div>
 
-          </div>
+          </motion.div>
 
           {/* Right Column: Real Full-Stack Message Form */}
-          <div className="lg:col-span-7">
+          <motion.div
+            className="lg:col-span-7"
+            variants={fadeUp}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.15 }}
+          >
             <div className="p-6 sm:p-8 rounded-xl bg-[#101217] border border-[#1f222c]">
               
               <div className="flex items-center justify-between pb-4 mb-6 border-b border-[#1b1e26]">
@@ -290,7 +318,7 @@ export default function Contact() {
               )}
 
             </div>
-          </div>
+          </motion.div>
 
         </div>
 
