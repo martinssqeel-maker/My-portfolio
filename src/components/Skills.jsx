@@ -1,17 +1,16 @@
 import React, { useState } from 'react';
 import { personalData } from '../data/portfolioData';
-import { Cpu, Layout, Server, Wrench, Palette } from 'lucide-react';
+import { Cpu, Layout, Wrench, Code2 } from 'lucide-react';
 
 export default function Skills() {
   const { skills } = personalData;
   const [selectedCategory, setSelectedCategory] = useState('All');
 
   const categoryIcons = {
-    'Frontend & Client Architecture': Layout,
-    'Programming & Logic': Cpu,
-    'Backend & Data Systems': Server,
-    'Tooling & Workflow': Wrench,
-    'Design & UX Principles': Palette,
+    'Core Web Development': Layout,
+    'Frameworks & Client Architecture': Code2,
+    'Programming & Foundations': Cpu,
+    'Developer Tools & Environment': Wrench,
   };
 
   const categories = ['All', ...skills.map((s) => s.category)];
@@ -29,15 +28,15 @@ export default function Skills() {
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
           <div>
             <span className="font-mono text-xs uppercase tracking-wider text-blue-400 mb-2 block">
-              02 / Technical Capability
+              02 / Technical Stack &amp; Tools
             </span>
             <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-[#f4f5f8]">
-              Skills &amp; Technology Stack
+              Verified Skills &amp; Tools
             </h2>
           </div>
           <p className="text-sm text-[#9ca3af] max-w-md">
-            Grounded in modern web standards, component modularity, and disciplined execution.
-            Every tool listed represents hands-on project implementation.
+            Technologies I have actually worked with or am actively learning.
+            No inflated percentages or fabricated senior expertise.
           </p>
         </div>
 
@@ -87,7 +86,7 @@ export default function Skills() {
                     </div>
                   </div>
                   <span className="font-mono text-xs text-[#5b6270]">
-                    {categoryGroup.items.length} tools
+                    {categoryGroup.items.length} technologies
                   </span>
                 </div>
 

@@ -21,10 +21,10 @@ export default function ManualNoticeModal() {
           type="button"
           onClick={() => setOpen(true)}
           className="flex items-center gap-2 px-3 py-2 rounded-lg bg-[#14161f]/90 hover:bg-[#1a1d28] border border-[#232736] text-xs font-mono text-[#9ca3af] hover:text-[#f4f5f8] shadow-lg backdrop-blur-sm transition-all"
-          title="Open Project Configuration Guide"
+          title="Open Authenticity & Data Config Guide"
         >
           <Sliders size={13} className="text-blue-400" />
-          <span className="hidden sm:inline">Data Config Guide</span>
+          <span className="hidden sm:inline">Authenticity Checklist</span>
         </button>
       </div>
 
@@ -36,15 +36,15 @@ export default function ManualNoticeModal() {
             {/* Header */}
             <div className="flex items-center justify-between pb-4 mb-4 border-b border-[#1b1e28]">
               <div className="flex items-center gap-2.5">
-                <div className="p-2 rounded-lg bg-blue-500/10 text-blue-400 border border-blue-500/20">
+                <div className="p-2 rounded-lg bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
                   <FileCode size={18} />
                 </div>
                 <div>
                   <h3 className="text-base font-bold text-[#f4f5f8]">
-                    Personal Data &amp; Content Architecture
+                    Authenticity Audit &amp; Data Configuration
                   </h3>
                   <p className="text-xs text-[#9ca3af]">
-                    Centralized file for real projects, SIWES details &amp; links
+                    Representing Martins' real projects, SIWES training &amp; tools
                   </p>
                 </div>
               </div>
@@ -63,7 +63,7 @@ export default function ManualNoticeModal() {
               
               <div className="p-3.5 rounded-lg bg-[#13151d] border border-[#1d202b] space-y-2">
                 <div className="flex items-center justify-between">
-                  <span className="text-[#f4f5f8] font-semibold">Primary Config Path:</span>
+                  <span className="text-[#f4f5f8] font-semibold">Config File Location:</span>
                   <button
                     type="button"
                     onClick={copyPath}
@@ -80,34 +80,43 @@ export default function ManualNoticeModal() {
 
               <div className="space-y-3 font-sans text-xs sm:text-sm">
                 <div className="font-mono text-xs text-[#5b6270] uppercase tracking-wider">
-                  Configurable Items
+                  Remaining Manual Action Required Items:
                 </div>
                 
                 <div className="grid grid-cols-1 gap-2.5">
                   <div className="p-3 rounded-lg bg-[#12141a] border border-[#1b1e26]">
-                    <span className="font-mono font-semibold text-[#f4f5f8] block mb-1">
-                      1. Projects &amp; Live URLs
+                    <span className="font-mono font-semibold text-emerald-400 block mb-1">
+                      1. Zapdata &amp; Campus Marketplace URLs
                     </span>
                     <span className="text-[#9ca3af] text-xs">
-                      Update titles, live deployment links, and GitHub repo links in <code>projects[]</code>.
+                      If your projects are hosted on Vercel/Netlify or live domains, paste their URLs into <code>projects[].liveUrl</code> and confirm your repository names in <code>githubUrl</code>.
+                    </span>
+                  </div>
+
+                  <div className="p-3 rounded-lg bg-[#12141a] border border-[#1b1e26]">
+                    <span className="font-mono font-semibold text-emerald-400 block mb-1">
+                      2. SIWES Employer &amp; Institution Name
+                    </span>
+                    <span className="text-[#9ca3af] text-xs">
+                      In <code>experience[0]</code>, fill in your actual SIWES IT firm / placement organization and your university or polytechnic name.
                     </span>
                   </div>
 
                   <div className="p-3 rounded-lg bg-[#12141a] border border-[#1b1e26]">
                     <span className="font-mono font-semibold text-[#f4f5f8] block mb-1">
-                      2. Practical Training / SIWES
+                      3. WhatsApp Contact Link (Optional)
                     </span>
                     <span className="text-[#9ca3af] text-xs">
-                      Provide your specific organization/company name and location under <code>experience[]</code>.
+                      In <code>personalData.whatsapp</code>, optionally provide your direct WhatsApp link (e.g. <code>"https://wa.me/234XXXXXXXXXX"</code>).
                     </span>
                   </div>
 
                   <div className="p-3 rounded-lg bg-[#12141a] border border-[#1b1e26]">
                     <span className="font-mono font-semibold text-[#f4f5f8] block mb-1">
-                      3. WhatsApp &amp; Social Links (Optional)
+                      4. Profile Headshot Photo (Optional)
                     </span>
                     <span className="text-[#9ca3af] text-xs">
-                      Optionally fill in <code>whatsapp</code>, <code>twitter</code>, or <code>linkedin</code> in <code>personalData</code>.
+                      Place your real photo at <code>src/assets/profile.jpg</code> to display your picture instead of the monogram badge.
                     </span>
                   </div>
                 </div>
@@ -120,7 +129,7 @@ export default function ManualNoticeModal() {
                   onClick={() => setOpen(false)}
                   className="w-full py-2.5 rounded-lg text-xs font-semibold bg-[#f4f5f8] text-[#090a0d] hover:bg-white transition-colors"
                 >
-                  Understood
+                  Close &amp; Continue Viewing
                 </button>
               </div>
 

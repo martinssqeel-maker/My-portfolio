@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { personalData } from '../data/portfolioData';
-import { ArrowDown, Copy, Check, Terminal, Layers, Activity } from 'lucide-react';
+import { ArrowDown, Copy, Check, Terminal, Layers, FolderKanban } from 'lucide-react';
 
 export default function Hero() {
   const [copied, setCopied] = useState(false);
-  const [activeTab, setActiveTab] = useState('standards');
+  const [activeTab, setActiveTab] = useState('projects');
 
   const copyEmail = () => {
     navigator.clipboard.writeText(personalData.email);
@@ -41,7 +41,7 @@ export default function Hero() {
             <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight text-[#f4f5f8] leading-[1.1] mb-6">
               Hello, I'm <span className="text-white underline decoration-blue-500/60 decoration-2 underline-offset-8">{personalData.name}</span>.
               <span className="block mt-2 text-2xl sm:text-3xl md:text-4xl font-normal text-[#9ca3af]">
-                Engineering fast, deliberate web interfaces.
+                Building practical web products and accessible interfaces.
               </span>
             </h1>
 
@@ -88,14 +88,14 @@ export default function Hero() {
               </button>
             </div>
 
-            {/* Quick Metrics Bar */}
+            {/* Real Foundation Fact Bar */}
             <div className="grid grid-cols-3 gap-6 pt-10 mt-10 border-t border-[#1f222c] w-full max-w-lg">
               <div>
                 <div className="text-xs font-mono text-[#5b6270] uppercase tracking-wider mb-1">
-                  Core Craft
+                  Primary Focus
                 </div>
                 <div className="text-sm font-semibold text-[#f4f5f8]">
-                  React &amp; Modern UI
+                  Web Applications
                 </div>
               </div>
               <div>
@@ -103,22 +103,22 @@ export default function Hero() {
                   Field Work
                 </div>
                 <div className="text-sm font-semibold text-[#f4f5f8]">
-                  SIWES Trained
+                  SIWES Practical IT
                 </div>
               </div>
               <div>
                 <div className="text-xs font-mono text-[#5b6270] uppercase tracking-wider mb-1">
-                  Commitment
+                  Status
                 </div>
                 <div className="text-sm font-semibold text-emerald-400">
-                  Production Ready
+                  Actively Building
                 </div>
               </div>
             </div>
 
           </div>
 
-          {/* Right Column: Interactive Engineering Spec Console */}
+          {/* Right Column: Authentic Developer Spec Console */}
           <div className="lg:col-span-5 w-full">
             <div className="rounded-xl bg-[#101217] border border-[#1f222c] shadow-2xl overflow-hidden">
               
@@ -128,11 +128,11 @@ export default function Hero() {
                   <div className="w-2.5 h-2.5 rounded-full bg-[#2d313c]" />
                   <div className="w-2.5 h-2.5 rounded-full bg-[#2d313c]" />
                   <div className="w-2.5 h-2.5 rounded-full bg-[#2d313c]" />
-                  <span className="ml-2 font-mono text-xs text-[#5b6270]">martins.spec.ts</span>
+                  <span className="ml-2 font-mono text-xs text-[#5b6270]">martins.workspace</span>
                 </div>
                 <div className="flex items-center gap-1 font-mono text-[11px] text-[#5b6270]">
                   <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
-                  <span>runtime: active</span>
+                  <span>status: building</span>
                 </div>
               </div>
 
@@ -140,15 +140,15 @@ export default function Hero() {
               <div className="flex border-b border-[#1f222c] bg-[#101217]">
                 <button
                   type="button"
-                  onClick={() => setActiveTab('standards')}
+                  onClick={() => setActiveTab('projects')}
                   className={`flex items-center gap-1.5 px-4 py-2.5 text-xs font-mono border-b-2 transition-colors ${
-                    activeTab === 'standards'
+                    activeTab === 'projects'
                       ? 'border-blue-500 text-[#f4f5f8] bg-[#161820]'
                       : 'border-transparent text-[#9ca3af] hover:text-[#f4f5f8]'
                   }`}
                 >
-                  <Activity size={13} />
-                  <span>Standards</span>
+                  <FolderKanban size={13} />
+                  <span>Real Projects</span>
                 </button>
                 <button
                   type="button"
@@ -160,7 +160,7 @@ export default function Hero() {
                   }`}
                 >
                   <Terminal size={13} />
-                  <span>Git Status</span>
+                  <span>Terminal</span>
                 </button>
                 <button
                   type="button"
@@ -172,55 +172,65 @@ export default function Hero() {
                   }`}
                 >
                   <Layers size={13} />
-                  <span>Stack</span>
+                  <span>Tech Stack</span>
                 </button>
               </div>
 
               {/* Tab Content */}
               <div className="p-5 font-mono text-xs">
-                {activeTab === 'standards' && (
+                {activeTab === 'projects' && (
                   <div className="space-y-3.5">
-                    <div className="flex items-center justify-between py-1.5 border-b border-[#1b1e26]">
-                      <span className="text-[#9ca3af]">Interface Latency</span>
-                      <span className="text-emerald-400 font-semibold">&lt; 16ms (60 FPS)</span>
+                    <div className="p-2.5 rounded bg-[#141620] border border-[#1d222e]">
+                      <div className="flex items-center justify-between text-[#f4f5f8] font-bold">
+                        <span>1. Zapdata</span>
+                        <span className="text-[10px] text-emerald-400 px-1.5 py-0.5 rounded bg-emerald-500/10">Active</span>
+                      </div>
+                      <p className="text-[11px] text-[#9ca3af] mt-1 font-sans">
+                        VTU web portal for purchasing MTN, Airtel, Glo &amp; 9mobile data/airtime.
+                      </p>
                     </div>
-                    <div className="flex items-center justify-between py-1.5 border-b border-[#1b1e26]">
-                      <span className="text-[#9ca3af]">Cumulative Layout Shift</span>
-                      <span className="text-emerald-400 font-semibold">0.00 (Zero Shift)</span>
+
+                    <div className="p-2.5 rounded bg-[#141620] border border-[#1d222e]">
+                      <div className="flex items-center justify-between text-[#f4f5f8] font-bold">
+                        <span>2. Campus Marketplace</span>
+                        <span className="text-[10px] text-blue-400 px-1.5 py-0.5 rounded bg-blue-500/10">Active</span>
+                      </div>
+                      <p className="text-[11px] text-[#9ca3af] mt-1 font-sans">
+                        Student peer exchange for textbooks, gadgets &amp; dorm essentials with WhatsApp handoff.
+                      </p>
                     </div>
-                    <div className="flex items-center justify-between py-1.5 border-b border-[#1b1e26]">
-                      <span className="text-[#9ca3af]">Semantic &amp; a11y Target</span>
-                      <span className="text-blue-400 font-semibold">WCAG 2.1 AA Compliant</span>
-                    </div>
-                    <div className="flex items-center justify-between py-1.5 border-b border-[#1b1e26]">
-                      <span className="text-[#9ca3af]">Responsive Adaptation</span>
-                      <span className="text-[#f4f5f8]">320px – 4K Viewports</span>
-                    </div>
-                    <div className="flex items-center justify-between py-1.5">
-                      <span className="text-[#9ca3af]">Bundle Philosophy</span>
-                      <span className="text-[#f4f5f8]">Zero Unused Bloat</span>
+
+                    <div className="p-2.5 rounded bg-[#141620] border border-[#1d222e]">
+                      <div className="flex items-center justify-between text-[#f4f5f8] font-bold">
+                        <span>3. Fashion Lookbook</span>
+                        <span className="text-[10px] text-amber-400 px-1.5 py-0.5 rounded bg-amber-500/10">Showcase</span>
+                      </div>
+                      <p className="text-[11px] text-[#9ca3af] mt-1 font-sans">
+                        Responsive fashion catalog with sizing specifications and collection browsing.
+                      </p>
                     </div>
                   </div>
                 )}
 
                 {activeTab === 'terminal' && (
                   <div className="text-[#9ca3af] space-y-2">
-                    <div className="text-[#5b6270]">$ git status -s</div>
-                    <div className="text-emerald-400">M  src/portfolio/martins.config</div>
-                    <div className="text-blue-400">?? src/components/Experience.jsx (SIWES)</div>
-                    <div className="pt-2 text-[#5b6270]">$ git log -1 --pretty=format:"%h %s"</div>
-                    <div className="text-[#f4f5f8]">cb3856b Refined frontend engineering systems</div>
-                    <div className="pt-2 text-[#5b6270]">$ whoami</div>
-                    <div className="text-blue-400">Martins (martinssqeel-maker)</div>
+                    <div className="text-[#5b6270]">$ whoami</div>
+                    <div className="text-blue-400 font-bold">Martins (martinssqeel-maker)</div>
+                    <div className="pt-1 text-[#5b6270]">$ git branch --show-current</div>
+                    <div className="text-[#f4f5f8]">arena/01a0beed-my-portfolio</div>
+                    <div className="pt-1 text-[#5b6270]">$ git log -1 --oneline</div>
+                    <div className="text-[#eceef2]">cb3856b Create My portfolio</div>
+                    <div className="pt-1 text-[#5b6270]">$ code --status</div>
+                    <div className="text-emerald-400">VS Code: workspace active</div>
                   </div>
                 )}
 
                 {activeTab === 'stack' && (
                   <div className="space-y-3">
                     <div>
-                      <div className="text-[#5b6270] mb-1">Client Engineering:</div>
+                      <div className="text-[#5b6270] mb-1.5">Daily Building:</div>
                       <div className="flex flex-wrap gap-1.5">
-                        {['React 19', 'JavaScript ESNext', 'HTML5 Semantic', 'Tailwind CSS'].map((tech) => (
+                        {['HTML5', 'CSS3', 'JavaScript ES6+', 'React', 'Tailwind CSS'].map((tech) => (
                           <span key={tech} className="px-2 py-0.5 rounded bg-[#161820] text-[#f4f5f8] border border-[#1f222c]">
                             {tech}
                           </span>
@@ -228,9 +238,9 @@ export default function Hero() {
                       </div>
                     </div>
                     <div>
-                      <div className="text-[#5b6270] mb-1">Architecture &amp; Tools:</div>
+                      <div className="text-[#5b6270] mb-1.5">Tools &amp; Learning:</div>
                       <div className="flex flex-wrap gap-1.5">
-                        {['Vite', 'Git / GitHub', 'REST APIs', 'Chrome DevTools'].map((tool) => (
+                        {['Python', 'VS Code', 'Git / GitHub', 'Vite', 'Chrome DevTools'].map((tool) => (
                           <span key={tool} className="px-2 py-0.5 rounded bg-[#161820] text-[#9ca3af] border border-[#1f222c]">
                             {tool}
                           </span>
@@ -243,8 +253,8 @@ export default function Hero() {
 
               {/* Console Footer */}
               <div className="px-5 py-2.5 bg-[#0d0e12] border-t border-[#1f222c] flex items-center justify-between text-[11px] font-mono text-[#5b6270]">
-                <span>Status: Engineered for production</span>
-                <span className="text-blue-400">verified</span>
+                <span>Grounded in practical building</span>
+                <span className="text-emerald-400">100% authentic</span>
               </div>
             </div>
           </div>

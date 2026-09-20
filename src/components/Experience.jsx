@@ -20,8 +20,8 @@ export default function Experience() {
             </h2>
           </div>
           <p className="text-sm text-[#9ca3af] max-w-md">
-            Hands-on software development through industrial training (SIWES), rigorous
-            independent project engineering, and continuous technical refinement.
+            Grounded in direct hands-on training (SIWES), real project development
+            (Zapdata &amp; Campus Marketplace), and disciplined software fundamentals.
           </p>
         </div>
 
@@ -47,19 +47,26 @@ export default function Experience() {
                   {/* Top Header */}
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-4 mb-4 border-b border-[#1b1e26]">
                     <div>
-                      <div className="flex items-center gap-2">
+                      <div className="flex flex-wrap items-center gap-2">
                         {isSIWES && (
                           <span className="px-2 py-0.5 rounded text-[10px] font-mono font-semibold bg-blue-500/10 text-blue-400 border border-blue-500/20">
-                            Practical Training
+                            SIWES / IT Practicum
                           </span>
                         )}
                         <h3 className="text-lg sm:text-xl font-bold text-[#f4f5f8]">
                           {item.role}
                         </h3>
                       </div>
-                      <div className="text-sm text-[#9ca3af] font-medium mt-0.5">
+                      
+                      <div className="text-sm text-[#9ca3af] font-medium mt-1">
                         {item.organization}
                       </div>
+
+                      {item.institution && (
+                        <div className="text-xs text-[#5b6270] font-mono mt-0.5">
+                          Institution: {item.institution}
+                        </div>
+                      )}
                     </div>
 
                     <div className="flex items-center gap-4 text-xs font-mono text-[#5b6270]">
@@ -82,7 +89,7 @@ export default function Experience() {
                   {/* Contributions */}
                   <div className="space-y-2 mb-6">
                     <div className="font-mono text-xs text-[#5b6270] uppercase tracking-wider mb-2">
-                      Key Technical Contributions
+                      Key Activities &amp; Responsibilities
                     </div>
                     {item.contributions.map((c, i) => (
                       <div key={i} className="flex items-start gap-2.5 text-xs sm:text-sm text-[#eceef2]">
@@ -95,7 +102,7 @@ export default function Experience() {
                   {/* Skills Tag Bar */}
                   <div className="flex flex-wrap items-center gap-2 pt-4 border-t border-[#1a1d26]">
                     <span className="font-mono text-xs text-[#5b6270] mr-2">
-                      Competencies:
+                      Technologies &amp; Competencies:
                     </span>
                     {item.skillsApplied.map((skill) => (
                       <span

@@ -6,10 +6,10 @@ export default function About() {
   const { about } = personalData;
 
   const iconMap = {
-    '01': Code,
-    '02': Zap,
-    '03': ShieldCheck,
-    '04': Compass,
+    '01': Zap,
+    '02': Compass,
+    '03': Code,
+    '04': ShieldCheck,
   };
 
   return (
@@ -44,24 +44,24 @@ export default function About() {
             {/* Practical Focus Checklist */}
             <div className="pt-6 border-t border-[#1f222c]">
               <div className="font-mono text-xs text-[#5b6270] uppercase tracking-wider mb-4">
-                What I Focus On Daily
+                What I Build &amp; Practice Daily
               </div>
               <ul className="space-y-2.5 font-mono text-xs text-[#eceef2]">
                 <li className="flex items-center gap-2">
                   <span className="w-1.5 h-1.5 rounded-full bg-blue-500" />
-                  <span>Translating UI layouts into maintainable, responsive React code</span>
+                  <span>Translating UI layouts into clean, responsive HTML, CSS &amp; React code</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <span className="w-1.5 h-1.5 rounded-full bg-blue-500" />
-                  <span>Eliminating rendering stutters, layout shifts, and heavy dependency weight</span>
+                  <span>Building real products: VTU platforms (Zapdata) and student marketplaces</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <span className="w-1.5 h-1.5 rounded-full bg-blue-500" />
-                  <span>Implementing semantic HTML5 structure with keyboard focus paths</span>
+                  <span>Practicing version control with Git/GitHub and debugging in VS Code</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <span className="w-1.5 h-1.5 rounded-full bg-blue-500" />
-                  <span>Structuring asynchronous API integrations with clear error boundaries</span>
+                  <span>Expanding programming fundamentals with Python and algorithmic problem-solving</span>
                 </li>
               </ul>
             </div>
@@ -70,7 +70,7 @@ export default function About() {
           {/* Right Column: Engineering Tenets */}
           <div className="lg:col-span-6 space-y-4">
             <div className="font-mono text-xs text-[#5b6270] uppercase tracking-wider mb-2">
-              Engineering Principles
+              Core Principles
             </div>
 
             <div className="grid grid-cols-1 gap-3.5">
