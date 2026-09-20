@@ -91,6 +91,53 @@ router.post('/logout', (req, res) => {
   });
 });
 
+// POST /api/admin/change-password - Secure password update for administrator
+router.post('/change-password', requireAdmin, async (req, res) => {
+  try {
+    const { currentPassword, newPassword } = req.body;
+
+    if (!currentPassword || !newPassword) {
+      return res.status(400).json({
+        success: false,
+        error: 'Current password and new password are required.',
+      });
+    }
+
+    if (newPassword.length < 8) {
+      return res.status(400).json({
+        success: false,
+        error: 'New password must be at least 8 characters long.',
+      });
+    }
+
+    const user = db.prepare('SELECT * FROM users WHERE id = ?').get(req.user.id);
+    if (!user) {
+      return res.status(404).json({ success: false, error: 'User not found.' });
+    }
+
+    const match = await bcrypt.compare(currentPassword, user.passwordHash);
+    if (!match) {
+      return res.status(401).json({
+        success: false,
+        error: 'Current password is incorrect.',
+      });
+    }
+
+    const newHash = await bcrypt.hash(newPassword, 10);
+    const now = new Date().toISOString();
+
+    db.prepare('UPDATE users SET passwordHash = ?, updatedAt = ? WHERE id = ?').run(newHash, now, user.id);
+
+    res.json({
+      success: true,
+      message: 'Password successfully updated.',
+    });
+  } catch (err) {
+    console.error('Password change error:', err);
+    res.status(500).json({ success: false, error: 'Failed to update password.' });
+  }
+});
+
 // GET /api/admin/me - Verify current session
 router.get('/me', requireAuth, (req, res) => {
   res.json({

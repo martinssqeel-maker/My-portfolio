@@ -18,11 +18,11 @@ export default function Footer({ onOpenAdmin }) {
           {/* Identity & Short Statement */}
           <div className="flex flex-col sm:flex-row sm:items-center gap-3 text-center sm:text-left">
             <span className="font-mono text-sm font-bold text-[#f4f5f8]">
-              {personalData.name.toLowerCase()}.dev
+              martinsmoses.dev
             </span>
             <span className="text-[#5b6270] hidden sm:inline">/</span>
             <span className="text-xs text-[#9ca3af]">
-              Frontend Engineer focused on performance, accessibility, and craft.
+              Martins Moses — Frontend Developer focused on performance, accessibility, and craft.
             </span>
           </div>
 

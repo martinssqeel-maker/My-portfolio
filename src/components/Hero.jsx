@@ -128,7 +128,7 @@ export default function Hero() {
                   <div className="w-2.5 h-2.5 rounded-full bg-[#2d313c]" />
                   <div className="w-2.5 h-2.5 rounded-full bg-[#2d313c]" />
                   <div className="w-2.5 h-2.5 rounded-full bg-[#2d313c]" />
-                  <span className="ml-2 font-mono text-xs text-[#5b6270]">martins.workspace</span>
+                  <span className="ml-2 font-mono text-xs text-[#5b6270]">martinsmoses.workspace</span>
                 </div>
                 <div className="flex items-center gap-1 font-mono text-[11px] text-[#5b6270]">
                   <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
@@ -215,7 +215,7 @@ export default function Hero() {
                 {activeTab === 'terminal' && (
                   <div className="text-[#9ca3af] space-y-2">
                     <div className="text-[#5b6270]">$ whoami</div>
-                    <div className="text-blue-400 font-bold">Martins (martinssqeel-maker)</div>
+                    <div className="text-blue-400 font-bold">Martins Moses (martinssqeel-maker)</div>
                     <div className="pt-1 text-[#5b6270]">$ git branch --show-current</div>
                     <div className="text-[#f4f5f8]">arena/01a0beed-my-portfolio</div>
                     <div className="pt-1 text-[#5b6270]">$ git log -1 --oneline</div>

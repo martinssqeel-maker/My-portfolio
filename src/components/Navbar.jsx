@@ -77,10 +77,10 @@ export default function Navbar({ onOpenAdmin }) {
         <a
           href="#hero"
           className="group flex items-center gap-2.5 text-decoration-none focus-visible:outline-none"
-          aria-label="Martins - Back to top"
+          aria-label="Martins Moses - Back to top"
         >
           <span className="font-mono text-sm tracking-tight font-semibold text-[#f4f5f8] group-hover:text-blue-400 transition-colors">
-            {personalData.name.toLowerCase()}.dev
+            martinsmoses.dev
           </span>
           <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[11px] font-mono bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />

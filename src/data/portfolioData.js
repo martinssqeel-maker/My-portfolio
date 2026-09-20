@@ -1,12 +1,13 @@
 /**
- * Authenticity-Audited Portfolio Data for Martins
+ * Personal Portfolio Configuration for Martins Moses
  * 
- * Central configuration file representing Martins' REAL projects,
+ * Central configuration file representing Martins Moses' real projects,
  * verified skills, and practical SIWES training journey.
  */
 
 export const personalData = {
-  name: "Martins",
+  name: "Martins Moses",
+  shortName: "Martins",
   handle: "martinssqeel-maker",
   role: "Frontend Developer & Student Builder",
   status: "Open to software roles, SIWES continuation & collaborations",
@@ -32,7 +33,7 @@ export const personalData = {
 
   about: {
     headline: "Grounded in practical building, not hype.",
-    lead: "I'm Martins, a developer focused on building functional, responsive web products that solve tangible problems for real users.",
+    lead: "I'm Martins Moses, a developer focused on building functional, responsive web products that solve tangible problems for real users.",
     paragraphs: [
       "My development journey is driven by practical implementation: writing clean HTML, CSS, and modern JavaScript, then advancing into component-driven React applications. I believe the best way to master software engineering is to build real applications that real people can use, such as Zapdata (a VTU/data-selling portal) and Campus Marketplace (a peer exchange for students).",
       "Through structured academic study, self-directed building, and practical industrial training (SIWES), I have developed a disciplined approach to responsive layouts, cross-device compatibility, and version control with Git and VS Code. I focus on writing clean, readable code and continuously refining my capabilities."
@@ -122,7 +123,6 @@ export const personalData = {
         "Interactive wallet balance and simulated order confirmation feedback"
       ],
       technologies: ["React", "JavaScript (ES6+)", "Tailwind CSS", "HTML5 / CSS3", "LocalStorage API"],
-      // MANUAL ACTION REQUIRED: Replace with your actual live deployment and repo URLs
       liveUrl: "https://zapdata.example.com", // [MANUAL ACTION REQUIRED: Provide live hosted URL if deployed]
       githubUrl: "https://github.com/martinssqeel-maker/zapdata", // [MANUAL ACTION REQUIRED: Confirm exact repo name]
       hasLiveDemo: true,
@@ -137,7 +137,7 @@ export const personalData = {
       featured: false,
       tag: "Student Community Platform",
       title: "Campus Marketplace — Student Peer-to-Peer Exchange",
-      tagline: "A localized marketplace enabling university students to buy, sell, and exchange textbooks, dorm essentials, and electronics.",
+      tagline: "A localized marketplace enabling university students to buy, sell, and exchange textbooks, dorm essentials, and calculators.",
       role: "Frontend Developer",
       period: "Active Project",
       problem:
@@ -192,7 +192,6 @@ export const personalData = {
     {
       period: "Practical Industrial Training (SIWES)",
       role: "Frontend Engineering Intern / SIWES Trainee",
-      // MANUAL ACTION REQUIRED: Replace with your actual training company / IT department
       organization: "[MANUAL ACTION REQUIRED: Your SIWES Company / IT Firm Name]",
       institution: "[MANUAL ACTION REQUIRED: Your University / Polytechnic Name]",
       location: "Nigeria",

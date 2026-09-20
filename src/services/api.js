@@ -96,6 +96,13 @@ export async function adminLogout() {
   }
 }
 
+export async function adminChangePassword(currentPassword, newPassword) {
+  return request('/admin/change-password', {
+    method: 'POST',
+    body: JSON.stringify({ currentPassword, newPassword }),
+  });
+}
+
 export async function adminGetMe() {
   return request('/admin/me');
 }

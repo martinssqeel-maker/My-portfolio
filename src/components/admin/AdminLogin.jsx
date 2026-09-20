@@ -48,7 +48,7 @@ export default function AdminLogin({ onLoginSuccess, onCancel }) {
             <Lock size={22} />
           </div>
           <h1 className="text-2xl font-bold text-[#f4f5f8] tracking-tight">
-            Administrator Access
+            Martins Moses Console
           </h1>
           <p className="text-xs font-mono text-[#9ca3af] mt-1">
             Sign in to manage projects, messages &amp; content

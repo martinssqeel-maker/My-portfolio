@@ -16,6 +16,7 @@ import {
   adminCreateExperience,
   adminUpdateExperience,
   adminDeleteExperience,
+  adminChangePassword,
   adminLogout,
 } from '../../services/api';
 
@@ -36,6 +37,7 @@ import {
   AlertCircle,
   ArrowLeft,
   Star,
+  KeyRound,
 } from 'lucide-react';
 
 export default function AdminDashboard({ user, onLogout, onExitDashboard }) {
@@ -47,6 +49,8 @@ export default function AdminDashboard({ user, onLogout, onExitDashboard }) {
   const [skills, setSkills] = useState([]);
   const [experience, setExperience] = useState([]);
   const [toast, setToast] = useState(null);
+  const [isChangingPassword, setIsChangingPassword] = useState(false);
+  const [pwdError, setPwdError] = useState('');
 
   // Modal States
   const [selectedMsg, setSelectedMsg] = useState(null);
@@ -93,6 +97,28 @@ export default function AdminDashboard({ user, onLogout, onExitDashboard }) {
   const handleLogout = async () => {
     await adminLogout();
     onLogout();
+  };
+
+  const handlePasswordSubmit = async (e) => {
+    e.preventDefault();
+    setPwdError('');
+    const fd = new FormData(e.target);
+    const currentPassword = fd.get('currentPassword');
+    const newPassword = fd.get('newPassword');
+    const confirmPassword = fd.get('confirmPassword');
+
+    if (newPassword !== confirmPassword) {
+      setPwdError('New passwords do not match.');
+      return;
+    }
+
+    try {
+      await adminChangePassword(currentPassword, newPassword);
+      showToast('Admin password updated successfully.');
+      setIsChangingPassword(false);
+    } catch (err) {
+      setPwdError(err.message || 'Password update failed.');
+    }
   };
 
   // -------------------------------------------------------------
@@ -301,7 +327,7 @@ export default function AdminDashboard({ user, onLogout, onExitDashboard }) {
             <span className="text-[#5b6270]">/</span>
             <div className="flex items-center gap-2">
               <span className="font-mono text-sm font-bold text-[#f4f5f8]">
-                Console
+                Martins Moses Console
               </span>
               <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
                 SQLite Persistent
@@ -313,6 +339,15 @@ export default function AdminDashboard({ user, onLogout, onExitDashboard }) {
             <span className="hidden md:inline text-[#5b6270]">
               {user ? user.email : 'admin'}
             </span>
+            <button
+              type="button"
+              onClick={() => { setPwdError(''); setIsChangingPassword(true); }}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-[#161820] text-[#f4f5f8] border border-[#1f222c] hover:bg-[#1e222d] transition-all"
+              title="Change Admin Password"
+            >
+              <KeyRound size={13} className="text-amber-400" />
+              <span className="hidden sm:inline">Password</span>
+            </button>
             <button
               type="button"
               onClick={onExitDashboard}
@@ -1268,6 +1303,87 @@ export default function AdminDashboard({ user, onLogout, onExitDashboard }) {
                   className="px-5 py-2 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-bold"
                 >
                   Save Experience
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Password Change Modal */}
+      {isChangingPassword && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-xs">
+          <div className="w-full max-w-md rounded-2xl bg-[#0f1117] border border-[#222633] p-6 shadow-2xl space-y-4">
+            <div className="flex items-center justify-between pb-3 border-b border-[#1b1e28]">
+              <div className="flex items-center gap-2">
+                <KeyRound size={16} className="text-amber-400" />
+                <h3 className="text-base font-bold text-white">Change Admin Password</h3>
+              </div>
+              <button
+                type="button"
+                onClick={() => setIsChangingPassword(false)}
+                className="p-1 rounded text-[#9ca3af] hover:text-white"
+              >
+                <X size={18} />
+              </button>
+            </div>
+
+            {pwdError && (
+              <div className="p-3 rounded-lg bg-red-500/10 border border-red-500/30 text-red-400 text-xs font-mono flex items-center gap-2">
+                <AlertCircle size={15} className="shrink-0" />
+                <span>{pwdError}</span>
+              </div>
+            )}
+
+            <form onSubmit={handlePasswordSubmit} className="space-y-3.5 text-xs font-mono">
+              <div>
+                <label className="block text-[#9ca3af] mb-1">Current Password *</label>
+                <input
+                  type="password"
+                  name="currentPassword"
+                  required
+                  placeholder="••••••••••••"
+                  className="w-full px-3 py-2 rounded-lg bg-[#14161f] border border-[#202430] text-white text-sm focus:border-blue-500 focus:outline-none"
+                />
+              </div>
+
+              <div>
+                <label className="block text-[#9ca3af] mb-1">New Password (min 8 chars) *</label>
+                <input
+                  type="password"
+                  name="newPassword"
+                  required
+                  minLength={8}
+                  placeholder="••••••••••••"
+                  className="w-full px-3 py-2 rounded-lg bg-[#14161f] border border-[#202430] text-white text-sm focus:border-blue-500 focus:outline-none"
+                />
+              </div>
+
+              <div>
+                <label className="block text-[#9ca3af] mb-1">Confirm New Password *</label>
+                <input
+                  type="password"
+                  name="confirmPassword"
+                  required
+                  minLength={8}
+                  placeholder="••••••••••••"
+                  className="w-full px-3 py-2 rounded-lg bg-[#14161f] border border-[#202430] text-white text-sm focus:border-blue-500 focus:outline-none"
+                />
+              </div>
+
+              <div className="pt-3 border-t border-[#1b1e28] flex justify-end gap-2">
+                <button
+                  type="button"
+                  onClick={() => setIsChangingPassword(false)}
+                  className="px-4 py-2 rounded-lg bg-[#161820] text-[#9ca3af]"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="px-5 py-2 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-bold"
+                >
+                  Update Password
                 </button>
               </div>
             </form>

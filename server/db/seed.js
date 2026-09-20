@@ -16,7 +16,7 @@ export async function seed() {
 
   // 1. Seed Administrator User
   const adminEmail = process.env.ADMIN_EMAIL || 'martinssqeel@gmail.com';
-  const initialPassword = process.env.ADMIN_INITIAL_PASSWORD || 'ChangeMe2026!Secure';
+  const initialPassword = process.env.ADMIN_PASSWORD || process.env.ADMIN_INITIAL_PASSWORD || 'ChangeMe2026!Secure';
   const passwordHash = await bcrypt.hash(initialPassword, 10);
 
   const existingAdmin = db.prepare('SELECT id FROM users WHERE email = ?').get(adminEmail);
@@ -26,9 +26,10 @@ export async function seed() {
       INSERT INTO users (id, email, passwordHash, role, createdAt, updatedAt)
       VALUES (?, ?, ?, 'admin', ?, ?)
     `).run(adminId, adminEmail, passwordHash, now, now);
-    console.log(`Admin user created: ${adminEmail}`);
+    console.log(`Admin account initialized for: ${adminEmail}`);
+    console.log(`[Security Alert] Remember to set your private ADMIN_PASSWORD in .env or update it via the Admin Console.`);
   } else {
-    console.log(`Admin user already exists: ${adminEmail}`);
+    console.log(`Admin account confirmed: ${adminEmail}`);
   }
 
   // 2. Seed Real Projects
