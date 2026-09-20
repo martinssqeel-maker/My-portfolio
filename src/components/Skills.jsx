@@ -1,7 +1,34 @@
 import React, { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
 import { personalData } from '../data/portfolioData';
 import { fetchSkills } from '../services/api';
 import { Cpu, Layout, Wrench, Code2, Database } from 'lucide-react';
+
+const fadeUp = {
+  hidden: { opacity: 0, y: 28 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.55, ease: [0.22, 1, 0.36, 1] },
+  },
+};
+
+const staggerContainer = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { staggerChildren: 0.12, delayChildren: 0.06 },
+  },
+};
+
+const cardItem = {
+  hidden: { opacity: 0, y: 22 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.45, ease: [0.22, 1, 0.36, 1] },
+  },
+};
 
 export default function Skills() {
   const [skillsList, setSkillsList] = useState(personalData.skills);
@@ -82,7 +109,13 @@ export default function Skills() {
       <div className="max-w-6xl mx-auto px-5 sm:px-8">
         
         {/* Section Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
+        <motion.div
+          className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12"
+          variants={fadeUp}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.35 }}
+        >
           <div>
             <div className="flex items-center gap-2 mb-2">
               <span className="font-mono text-xs uppercase tracking-wider text-blue-400 block">
@@ -103,10 +136,16 @@ export default function Skills() {
             Technologies I have actually worked with or am actively learning.
             No inflated percentages or fabricated senior expertise.
           </p>
-        </div>
+        </motion.div>
 
         {/* Category Filter Pills */}
-        <div className="flex flex-wrap gap-2 mb-10 pb-2 border-b border-[#1f222c]">
+        <motion.div
+          className="flex flex-wrap gap-2 mb-10 pb-2 border-b border-[#1f222c]"
+          variants={fadeUp}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.5 }}
+        >
           {categories.map((cat) => {
             const isSelected = selectedCategory === cat;
             return (
@@ -124,15 +163,22 @@ export default function Skills() {
               </button>
             );
           })}
-        </div>
+        </motion.div>
 
         {/* Skills Layout: Editorial List by Domain */}
-        <div className="grid grid-cols-1 gap-8">
+        <motion.div
+          className="grid grid-cols-1 gap-8"
+          variants={staggerContainer}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.1 }}
+        >
           {displayedSkills.map((categoryGroup) => {
             const Icon = categoryIcons[categoryGroup.category] || Layout;
             return (
-              <div
+              <motion.div
                 key={categoryGroup.category}
+                variants={cardItem}
                 className="rounded-xl bg-[#101217] border border-[#1f222c] p-6 sm:p-8"
               >
                 {/* Domain Header */}
@@ -176,10 +222,10 @@ export default function Skills() {
                     </div>
                   ))}
                 </div>
-              </div>
+              </motion.div>
             );
           })}
-        </div>
+        </motion.div>
 
       </div>
     </section>

@@ -114,7 +114,7 @@ router.get('/skills', async (req, res) => {
   }
 });
 
-// GET /api/experience - Retrieve verified experience & SIWES
+// GET /api/experience - Retrieve builder journey experience records
 router.get('/experience', async (req, res) => {
   try {
     const experiences = await db.all(`

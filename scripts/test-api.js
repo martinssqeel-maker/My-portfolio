@@ -93,7 +93,7 @@ async function run() {
     const stats = await request('/api/admin/stats', {
       headers: { Authorization: `Bearer ${token}` },
     });
-    assert(stats.status === 200 && stats.data.data.totalProjects >= 3, `GET /api/admin/stats returns metrics (projects: ${stats.data.data?.totalProjects})`);
+    assert(stats.status === 200 && stats.data.data.totalProjects >= 2, `GET /api/admin/stats returns metrics (projects: ${stats.data.data?.totalProjects})`);
 
     // 10. Admin Contact Messages List
     const msgs = await request('/api/admin/messages', {

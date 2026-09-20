@@ -1,6 +1,33 @@
 import React from 'react';
+import { motion } from 'framer-motion';
 import { personalData } from '../data/portfolioData';
 import { Code, ShieldCheck, Zap, Compass } from 'lucide-react';
+
+const fadeUp = {
+  hidden: { opacity: 0, y: 28 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.55, ease: [0.22, 1, 0.36, 1] },
+  },
+};
+
+const staggerContainer = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { staggerChildren: 0.1, delayChildren: 0.08 },
+  },
+};
+
+const cardItem = {
+  hidden: { opacity: 0, y: 20 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.45, ease: [0.22, 1, 0.36, 1] },
+  },
+};
 
 export default function About() {
   const { about } = personalData;
@@ -17,20 +44,32 @@ export default function About() {
       <div className="max-w-6xl mx-auto px-5 sm:px-8">
         
         {/* Section Header */}
-        <div className="mb-16">
+        <motion.div
+          className="mb-16"
+          variants={fadeUp}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.35 }}
+        >
           <span className="font-mono text-xs uppercase tracking-wider text-blue-400 mb-2 block">
             01 / Background &amp; Philosophy
           </span>
           <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-[#f4f5f8] max-w-2xl">
             {about.headline}
           </h2>
-        </div>
+        </motion.div>
 
         {/* Editorial Narrative Split */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
           
           {/* Left Column: Personal Narrative */}
-          <div className="lg:col-span-6 space-y-6 text-[#9ca3af] text-base sm:text-lg leading-relaxed">
+          <motion.div
+            className="lg:col-span-6 space-y-6 text-[#9ca3af] text-base sm:text-lg leading-relaxed"
+            variants={fadeUp}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.2 }}
+          >
             <p className="text-[#f4f5f8] font-medium text-lg sm:text-xl leading-snug">
               {about.lead}
             </p>
@@ -53,7 +92,7 @@ export default function About() {
                 </li>
                 <li className="flex items-center gap-2">
                   <span className="w-1.5 h-1.5 rounded-full bg-blue-500" />
-                  <span>Building real products: VTU platforms (Zapdata) and student marketplaces</span>
+                  <span>Shipping live products: Zapdata VTU platform and client e-commerce storefronts</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <span className="w-1.5 h-1.5 rounded-full bg-blue-500" />
@@ -65,20 +104,33 @@ export default function About() {
                 </li>
               </ul>
             </div>
-          </div>
+          </motion.div>
 
           {/* Right Column: Engineering Tenets */}
           <div className="lg:col-span-6 space-y-4">
-            <div className="font-mono text-xs text-[#5b6270] uppercase tracking-wider mb-2">
+            <motion.div
+              className="font-mono text-xs text-[#5b6270] uppercase tracking-wider mb-2"
+              variants={fadeUp}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, amount: 0.5 }}
+            >
               Core Principles
-            </div>
+            </motion.div>
 
-            <div className="grid grid-cols-1 gap-3.5">
+            <motion.div
+              className="grid grid-cols-1 gap-3.5"
+              variants={staggerContainer}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, amount: 0.15 }}
+            >
               {about.principles.map((item) => {
                 const IconComponent = iconMap[item.number] || Code;
                 return (
-                  <div
+                  <motion.div
                     key={item.number}
+                    variants={cardItem}
                     className="p-5 rounded-xl bg-[#101217] border border-[#1f222c] hover:border-[#2d3240] transition-colors"
                   >
                     <div className="flex items-start justify-between gap-4 mb-2">
@@ -95,10 +147,10 @@ export default function About() {
                     <p className="text-sm text-[#9ca3af] leading-relaxed pl-6">
                       {item.description}
                     </p>
-                  </div>
+                  </motion.div>
                 );
               })}
-            </div>
+            </motion.div>
           </div>
 
         </div>

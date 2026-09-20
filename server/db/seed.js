@@ -45,50 +45,33 @@ export async function seed() {
     // Flagship Project 1: Zapdata
     await db.run(insertProjectSql, [
       generateId('prj_'),
-      'Zapdata — VTU & Airtime/Data-Selling Web Application',
+      'Zapdata — VTU & Data Selling Platform',
       'zapdata',
-      'A streamlined web platform for purchasing mobile data bundles and airtime across Nigerian telecom networks.',
-      'Purchasing mobile data through slow USSD codes or bloated banking apps is cumbersome and frequently leads to failed transactions. Zapdata provides a clean, responsive purchase interface with carrier prefix auto-detection (MTN, Airtel, Glo, 9mobile), dynamic plan pricing, and instant top-up simulation.',
+      'A live web platform for purchasing mobile data bundles and airtime across Nigerian telecom networks.',
+      'Purchasing mobile data through slow USSD codes or bloated banking apps is cumbersome and frequently leads to failed transactions. Zapdata provides a clean, responsive purchase interface with carrier prefix auto-detection (MTN, Airtel, Glo, 9mobile), dynamic plan pricing, and a seamless checkout experience — fully deployed for real users at zapdata.com.ng.',
       JSON.stringify(['React', 'JavaScript (ES6+)', 'Tailwind CSS', 'HTML5 / CSS3', 'LocalStorage API']),
       '/assets/projects/zapdata-preview.png',
-      '', // [MANUAL ACTION REQUIRED: Provide live hosted URL when deployed]
-      '', // [MANUAL ACTION REQUIRED: Provide repository URL when ready]
+      'https://www.zapdata.com.ng/',
+      '',
       1,  // featured
       1,  // displayOrder
       now,
       now,
     ]);
 
-    // Project 2: Campus Marketplace
+    // Project 2: Suleman Fashion Store
     await db.run(insertProjectSql, [
       generateId('prj_'),
-      'Campus Marketplace — Student Peer-to-Peer Exchange',
-      'campus-marketplace',
-      'A localized marketplace enabling university students to buy, sell, and exchange textbooks, dorm essentials, and calculators.',
-      'University students constantly buy and sell textbooks, rechargeable fans, and calculators, but rely on chaotic WhatsApp class groups where listings get buried. Campus Marketplace provides an organized, searchable catalog of campus listings with category filters and direct click-to-chat WhatsApp communication.',
-      JSON.stringify(['React', 'JavaScript', 'Tailwind CSS', 'Responsive Design']),
-      '/assets/projects/campus-market-preview.png',
-      '', // [MANUAL ACTION REQUIRED: Provide live URL when hosted]
-      '', // [MANUAL ACTION REQUIRED: Provide repository URL when ready]
+      'Suleman Fashion Store — E-Commerce Platform',
+      'suleman-fashion',
+      'A fully deployed e-commerce storefront for a fashion brand, built end-to-end as freelance client work.',
+      'Independent fashion brands need a modern, conversion-ready web storefront to present collections, handle product browsing, and drive inquiries. Delivered Suleman Fashion Store as a polished e-commerce interface with product catalog browsing, collection presentation, and a mobile-first shopping experience — live on Netlify.',
+      JSON.stringify(['React', 'HTML5', 'CSS3', 'JavaScript', 'Netlify']),
+      '/assets/projects/fashion-web-preview.png',
+      'https://helpful-lebkuchen-2ce9af.netlify.app/',
+      '',
       0,  // featured
       2,  // displayOrder
-      now,
-      now,
-    ]);
-
-    // Project 3: Fashion Web Showcase
-    await db.run(insertProjectSql, [
-      generateId('prj_'),
-      'Fashion & Apparel Web Showcase',
-      'fashion-web',
-      'A modern lookbook and apparel catalog designed for bespoke fashion collections and streetwear brands.',
-      'Independent Nigerian fashion designers and streetwear brands need a modern, visually striking web showcase to present lookbook collections, fabric details, and sizing specifications without paying expensive SaaS fees.',
-      JSON.stringify(['React', 'HTML5', 'CSS3', 'JavaScript']),
-      '/assets/projects/fashion-web-preview.png',
-      '', // [MANUAL ACTION REQUIRED: Provide live URL when hosted]
-      '', // [MANUAL ACTION REQUIRED: Provide repository URL when ready]
-      0,  // featured
-      3,  // displayOrder
       now,
       now,
     ]);
@@ -143,7 +126,7 @@ export async function seed() {
     console.log('[Database Seed] Verified skills catalog seeded.');
   }
 
-  // 4. Seed Verified Experience & Practical SIWES (only if table empty)
+  // 4. Seed Builder Journey experience (only if table empty)
   const expCountRow = await db.get('SELECT COUNT(*) as count FROM experience');
   const expCount = parseInt(expCountRow?.count || 0, 10);
   if (expCount === 0) {
@@ -154,65 +137,47 @@ export async function seed() {
       ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `;
 
-    // 1. SIWES Practical Attachment
+    // 1. Freelance Frontend Developer
     await db.run(insertExpSql, [
       generateId('exp_'),
-      'Frontend Engineering Intern / SIWES Trainee',
-      '[MANUAL ACTION REQUIRED: Your SIWES Company / IT Firm Name]',
-      '[MANUAL ACTION REQUIRED: Your University / Polytechnic Name]',
-      'Completed the Students Industrial Work Experience Scheme (SIWES) practical training, gaining direct hands-on experience working on real-world software tasks, user interface debugging, and collaborative development.',
-      'Industrial Training Period',
-      'Completed',
+      'Freelance Frontend Developer',
+      'Independent Client & Product Work',
+      null,
+      'Delivering production frontend work for clients and personal products — from e-commerce storefronts to live VTU platforms — with a focus on responsive UI, clean React architecture, and shipped deployments.',
+      '2024',
+      'Present',
       JSON.stringify([
-        'Built and maintained responsive web layouts using semantic HTML5, modern CSS3, and JavaScript.',
-        'Collaborated with senior developers to diagnose interface bugs and optimize viewport scaling for mobile devices.',
-        'Applied Git version control fundamentals (branching, commits, pull requests) to manage daily codebase changes.',
-        'Tested web pages across different mobile browsers to ensure consistent user experience under varying network speeds.'
+        'Built and shipped Suleman Fashion Store, a live e-commerce storefront for a fashion client.',
+        'Created and maintain Zapdata, a production VTU and data-selling platform used by real customers.',
+        'Delivered mobile-first interfaces with semantic HTML, modern CSS/Tailwind, and React components.',
+        'Managed end-to-end delivery: design translation, implementation, deployment, and iteration.'
       ]),
-      JSON.stringify(['HTML5', 'CSS3', 'JavaScript', 'Git & GitHub', 'Responsive Design', 'Cross-Browser Testing']),
+      JSON.stringify(['React', 'JavaScript', 'Tailwind CSS', 'HTML5', 'CSS3', 'Netlify', 'Git & GitHub']),
       1,
       now,
     ]);
 
-    // 2. Personal Practical Products (Zapdata & Campus Marketplace)
+    // 2. Self-Directed Developer
     await db.run(insertExpSql, [
       generateId('exp_'),
-      'Practical Product Developer',
-      'Personal Software Projects (Zapdata & Campus Marketplace)',
+      'Self-Directed Developer',
+      'Continuous Building & Technical Growth',
       null,
-      'Designed and implemented functional web applications from scratch, translating practical everyday user problems into working software products.',
-      '2024',
+      'Building a strong technical foundation through continuous project work, deliberate practice, and shipping real products rather than tutorial-only learning.',
+      '2023',
       'Present',
       JSON.stringify([
-        'Architected Zapdata, implementing telecom carrier prefix auto-detection and data bundle selection.',
-        'Developed Campus Marketplace, structuring student category filters and direct WhatsApp seller communication.',
-        'Practiced clean component structuring in React and rapid layout development with Tailwind CSS.'
+        'Practiced modern frontend fundamentals daily: HTML, CSS, JavaScript, and React.',
+        'Shipped multiple live products and prototypes to production hosting environments.',
+        'Strengthened Git/GitHub workflow, debugging with DevTools, and component-driven architecture.',
+        'Expanded problem-solving skills with Python scripting and algorithmic practice.'
       ]),
-      JSON.stringify(['React', 'JavaScript', 'Tailwind CSS', 'UI Layouts', 'State Management']),
+      JSON.stringify(['React', 'JavaScript', 'Python', 'VS Code', 'Git & GitHub', 'Chrome DevTools']),
       2,
       now,
     ]);
 
-    // 3. Academic Foundations
-    await db.run(insertExpSql, [
-      generateId('exp_'),
-      'Student & Self-Taught Developer',
-      'Computer Science / Technical Studies',
-      '[MANUAL ACTION REQUIRED: Higher Institution Name]',
-      'Pursuing foundational computer science and technical coursework, reinforcing core programming logic, algorithms, and systematic software engineering principles.',
-      'Undergraduate Studies',
-      'In Progress',
-      JSON.stringify([
-        'Studied foundational computing principles, procedural logic, and web architecture.',
-        'Actively practiced software fundamentals outside the lecture hall through daily hands-on coding and project building.',
-        'Participated in peer technical discussions, code reviews, and academic team assignments.'
-      ]),
-      JSON.stringify(['Logic & Problem Solving', 'Web Architecture', 'Python Basics', 'Computer Science Fundamentals']),
-      3,
-      now,
-    ]);
-
-    console.log('[Database Seed] Verified experience timeline seeded.');
+    console.log('[Database Seed] Verified builder journey experience seeded.');
   }
 
   // 5. Seed Initial Welcome Message (only if table empty)

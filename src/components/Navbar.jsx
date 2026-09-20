@@ -8,6 +8,8 @@ export default function Navbar({ onOpenAdmin }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
+  const isAvailable = Boolean(personalData.availableForHire);
+
   useEffect(() => {
     const handleKeyDown = (e) => {
       if ((e.metaKey || e.ctrlKey) && e.shiftKey && e.key.toLowerCase() === 'a') {
@@ -60,7 +62,7 @@ export default function Navbar({ onOpenAdmin }) {
     { name: 'About', href: '#about', id: 'about' },
     { name: 'Skills', href: '#skills', id: 'skills' },
     { name: 'Projects', href: '#projects', id: 'projects' },
-    { name: 'Journey & SIWES', href: '#experience', id: 'experience' },
+    { name: 'My Journey', href: '#experience', id: 'experience' },
     { name: 'Contact', href: '#contact', id: 'contact' },
   ];
 
@@ -82,10 +84,17 @@ export default function Navbar({ onOpenAdmin }) {
           <span className="font-mono text-sm tracking-tight font-semibold text-[#f4f5f8] group-hover:text-blue-400 transition-colors">
             {personalData.domain || 'martinsmoses'}
           </span>
-          <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[11px] font-mono bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-            <span className="hidden sm:inline">available</span>
-          </span>
+          {isAvailable ? (
+            <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[11px] font-mono bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+              <span className="hidden sm:inline">available</span>
+            </span>
+          ) : (
+            <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[11px] font-mono bg-[#161820] text-[#5b6270] border border-[#1f222c]">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#5b6270]" />
+              <span className="hidden sm:inline">busy</span>
+            </span>
+          )}
         </a>
 
         {/* Desktop Nav */}

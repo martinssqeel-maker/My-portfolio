@@ -7,7 +7,6 @@ import Projects from './components/Projects';
 import Experience from './components/Experience';
 import Contact from './components/Contact';
 import Footer from './components/Footer';
-import ManualNoticeModal from './components/ManualNoticeModal';
 import AdminLogin from './components/admin/AdminLogin';
 import AdminDashboard from './components/admin/AdminDashboard';
 import { adminGetMe, getAuthToken } from './services/api';
@@ -116,9 +115,6 @@ export default function App() {
 
       {/* Footer */}
       <Footer onOpenAdmin={handleOpenAdmin} />
-
-      {/* Subtle Data Config Helper */}
-      <ManualNoticeModal />
     </div>
   );
 }

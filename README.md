@@ -1,6 +1,8 @@
 # Martins Moses — Full-Stack Personal Developer Portfolio & CMS
 
-A production-ready full-stack developer portfolio and Content Management System built for **Martins Moses** (`martinssqeel-maker`). The application couples a modern, mobile-responsive React frontend showcasing verified real-world projects (Zapdata, Campus Marketplace, Fashion Lookbook) and practical SIWES industrial training with a serverless-compatible Express.js API, PostgreSQL database abstraction (with SQLite fallback for local development), and an authenticated administrative CMS for real-time content and message management.
+A production-ready full-stack developer portfolio and Content Management System built for **Martins Moses** (`martinssqeel-maker` / `Martinssqeel`). The application couples a modern, mobile-responsive React frontend showcasing real shipped products (**Zapdata**, **Suleman Fashion Store**) and a professional builder journey with a serverless-compatible Express.js API, PostgreSQL database abstraction (with SQLite fallback for local development), and an authenticated administrative CMS for real-time content and message management.
+
+**Positioning:** Frontend Developer & Web Product Builder — *I build web products that work for real people.*
 
 ---
 
@@ -15,7 +17,7 @@ A production-ready full-stack developer portfolio and Content Management System 
         ▼                       ▼
   [ Static Frontend ]     [ Serverless API ] (api/index.js)
    (React 19 + Vite)      (Express 5 + JWT + Rate Limiting)
-                                │
+   + Framer Motion              │
                                 ▼
                    [ PostgreSQL Database ]
                (Supabase / Neon / AWS RDS / Railway)
@@ -23,7 +25,7 @@ A production-ready full-stack developer portfolio and Content Management System 
                   ├── projects (portfolio applications)
                   ├── contact_messages (visitor inquiries)
                   ├── skills (technical stack)
-                  └── experience (SIWES & practical journey)
+                  └── experience (builder journey)
 ```
 
 ---
@@ -44,7 +46,7 @@ The database layer (`server/db/database.js`) provides a unified asynchronous abs
 | `projects` | `"id"` (VARCHAR) | Real portfolio projects | `"title"`, `"slug"`, `"description"`, `"detailedDescription"`, `"technologies"`, `"liveUrl"`, `"githubUrl"`, `"featured"`, `"displayOrder"` |
 | `contact_messages` | `"id"` (VARCHAR) | Real visitor inquiries | `"name"`, `"email"`, `"subject"`, `"message"`, `"status"` (`unread`/`read`/`archived`), `"createdAt"` |
 | `skills` | `"id"` (VARCHAR) | Verified skills catalog | `"name"`, `"category"`, `"level"`, `"note"`, `"displayOrder"` |
-| `experience` | `"id"` (VARCHAR) | SIWES & practical timeline | `"title"`, `"organization"`, `"institution"`, `"description"`, `"startDate"`, `"endDate"`, `"contributions"`, `"skillsApplied"` |
+| `experience` | `"id"` (VARCHAR) | Builder journey timeline | `"title"`, `"organization"`, `"institution"`, `"description"`, `"startDate"`, `"endDate"`, `"contributions"`, `"skillsApplied"` |
 
 ---
 
@@ -55,7 +57,7 @@ The database layer (`server/db/database.js`) provides a unified asynchronous abs
 - `GET  /api/projects` — Retrieve all projects sorted by display order
 - `GET  /api/projects/:slug` — Retrieve single project details
 - `GET  /api/skills` — Retrieve skills list with categorized grouping
-- `GET  /api/experience` — Retrieve SIWES and practical journey records
+- `GET  /api/experience` — Retrieve builder journey experience records
 - `POST /api/contact` — Submit a message (validated, rate-limited, stored in database)
 
 ### Protected Admin Endpoints (`Authorization: Bearer <token>`)
@@ -73,7 +75,7 @@ The database layer (`server/db/database.js`) provides a unified asynchronous abs
 - `POST   /api/admin/skills` — Add new skill
 - `PATCH  /api/admin/skills/:id` — Update skill
 - `DELETE /api/admin/skills/:id` — Delete skill
-- `POST   /api/admin/experience` — Add experience/training record
+- `POST   /api/admin/experience` — Add experience/journey record
 - `PATCH  /api/admin/experience/:id` — Update experience record
 - `DELETE /api/admin/experience/:id` — Delete experience record
 
@@ -81,7 +83,7 @@ The database layer (`server/db/database.js`) provides a unified asynchronous abs
 
 ## 🚀 Vercel Deployment Instructions
 
-1. **Push your repository** to GitHub (`my portfolio`).
+1. **Push your repository** to GitHub (`My-portfolio`).
 2. **Create a Free PostgreSQL Database**:
    - Go to [Supabase](https://supabase.com) or [Neon](https://neon.tech) and create a free project.
    - Copy the PostgreSQL connection string (`DATABASE_URL`).
@@ -130,6 +132,9 @@ npm run build
 ## 👤 Portfolio Owner
 
 - **Name**: Martins Moses
-- **Positioning**: Frontend Developer & Practical Web Product Builder
+- **Handle**: Martinssqeel
+- **Positioning**: Frontend Developer & Web Product Builder
+- **Headline**: I build web products that work for real people.
+- **Live products**: [Zapdata](https://www.zapdata.com.ng/) · [Suleman Fashion Store](https://helpful-lebkuchen-2ce9af.netlify.app/)
 - **GitHub**: [https://github.com/martinssqeel-maker](https://github.com/martinssqeel-maker)
 - **Email**: [martinssqeel@gmail.com](mailto:martinssqeel@gmail.com)

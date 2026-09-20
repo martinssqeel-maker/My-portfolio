@@ -1,6 +1,16 @@
 import React, { useState } from 'react';
+import { motion } from 'framer-motion';
 import { personalData } from '../data/portfolioData';
 import { ArrowDown, Copy, Check, Terminal, Layers, FolderKanban } from 'lucide-react';
+
+const fadeUp = {
+  hidden: { opacity: 0, y: 28 },
+  visible: (i = 0) => ({
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.55, ease: [0.22, 1, 0.36, 1], delay: i * 0.08 },
+  }),
+};
 
 export default function Hero() {
   const [copied, setCopied] = useState(false);
@@ -17,6 +27,9 @@ export default function Hero() {
       id="hero"
       className="relative pt-32 pb-20 md:pt-40 md:pb-28 border-b border-[#1f222c] overflow-hidden"
     >
+      {/* Ambient blue glow behind headline */}
+      <div className="hero-glow" aria-hidden="true" />
+
       {/* Subtle background tech grid */}
       <div
         className="absolute inset-0 tech-grid-pattern opacity-40 pointer-events-none"
@@ -30,28 +43,56 @@ export default function Hero() {
           <div className="lg:col-span-7 flex flex-col items-start text-left">
             
             {/* Status & Identity Badge */}
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#12141a] border border-[#1f222c] text-xs font-mono text-[#9ca3af] mb-6">
+            <motion.div
+              className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#12141a] border border-[#1f222c] text-xs font-mono text-[#9ca3af] mb-6"
+              variants={fadeUp}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, amount: 0.4 }}
+              custom={0}
+            >
               <span className="w-2 h-2 rounded-full bg-blue-500 shadow-[0_0_8px_rgba(59,130,246,0.5)]" />
               <span>{personalData.role}</span>
               <span className="text-[#5b6270]">/</span>
               <span className="text-[#eceef2]">{personalData.location}</span>
-            </div>
+            </motion.div>
 
             {/* Name & Headline */}
-            <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight text-[#f4f5f8] leading-[1.1] mb-6">
-              Hello, I'm <span className="text-white underline decoration-blue-500/60 decoration-2 underline-offset-8">{personalData.name}</span>.
+            <motion.h1
+              className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight text-[#f4f5f8] leading-[1.1] mb-6"
+              variants={fadeUp}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, amount: 0.3 }}
+              custom={1}
+            >
+              Hello, I&apos;m <span className="text-white underline decoration-blue-500/60 decoration-2 underline-offset-8">{personalData.name}</span>.
               <span className="block mt-2 text-2xl sm:text-3xl md:text-4xl font-normal text-[#9ca3af]">
-                Building practical web products and accessible interfaces.
+                {personalData.hero.headline}
               </span>
-            </h1>
+            </motion.h1>
 
             {/* Personal Statement */}
-            <p className="text-base sm:text-lg text-[#9ca3af] leading-relaxed max-w-2xl mb-8 font-normal">
+            <motion.p
+              className="text-base sm:text-lg text-[#9ca3af] leading-relaxed max-w-2xl mb-8 font-normal"
+              variants={fadeUp}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, amount: 0.4 }}
+              custom={2}
+            >
               {personalData.hero.description}
-            </p>
+            </motion.p>
 
             {/* CTAs & Copy Email */}
-            <div className="flex flex-wrap items-center gap-3 w-full sm:w-auto">
+            <motion.div
+              className="flex flex-wrap items-center gap-3 w-full sm:w-auto"
+              variants={fadeUp}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, amount: 0.4 }}
+              custom={3}
+            >
               <a
                 href="#projects"
                 className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-lg text-sm font-semibold bg-[#f4f5f8] text-[#090a0d] hover:bg-white shadow-sm transition-all active:scale-[0.98]"
@@ -86,24 +127,31 @@ export default function Hero() {
                   </>
                 )}
               </button>
-            </div>
+            </motion.div>
 
             {/* Real Foundation Fact Bar */}
-            <div className="grid grid-cols-3 gap-6 pt-10 mt-10 border-t border-[#1f222c] w-full max-w-lg">
+            <motion.div
+              className="grid grid-cols-3 gap-6 pt-10 mt-10 border-t border-[#1f222c] w-full max-w-lg"
+              variants={fadeUp}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, amount: 0.4 }}
+              custom={4}
+            >
               <div>
                 <div className="text-xs font-mono text-[#5b6270] uppercase tracking-wider mb-1">
                   Primary Focus
                 </div>
                 <div className="text-sm font-semibold text-[#f4f5f8]">
-                  Web Applications
+                  Web Products
                 </div>
               </div>
               <div>
                 <div className="text-xs font-mono text-[#5b6270] uppercase tracking-wider mb-1">
-                  Field Work
+                  Delivery
                 </div>
                 <div className="text-sm font-semibold text-[#f4f5f8]">
-                  SIWES Practical IT
+                  Live &amp; Client Work
                 </div>
               </div>
               <div>
@@ -114,12 +162,19 @@ export default function Hero() {
                   Actively Building
                 </div>
               </div>
-            </div>
+            </motion.div>
 
           </div>
 
           {/* Right Column: Authentic Developer Spec Console */}
-          <div className="lg:col-span-5 w-full">
+          <motion.div
+            className="lg:col-span-5 w-full"
+            variants={fadeUp}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.2 }}
+            custom={2}
+          >
             <div className="rounded-xl bg-[#101217] border border-[#1f222c] shadow-2xl overflow-hidden">
               
               {/* Window Header */}
@@ -132,7 +187,7 @@ export default function Hero() {
                 </div>
                 <div className="flex items-center gap-1 font-mono text-[11px] text-[#5b6270]">
                   <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
-                  <span>status: building</span>
+                  <span>status: shipping</span>
                 </div>
               </div>
 
@@ -148,7 +203,7 @@ export default function Hero() {
                   }`}
                 >
                   <FolderKanban size={13} />
-                  <span>Real Projects</span>
+                  <span>Live Products</span>
                 </button>
                 <button
                   type="button"
@@ -183,30 +238,20 @@ export default function Hero() {
                     <div className="p-2.5 rounded bg-[#141620] border border-[#1d222e]">
                       <div className="flex items-center justify-between text-[#f4f5f8] font-bold">
                         <span>1. Zapdata</span>
-                        <span className="text-[10px] text-emerald-400 px-1.5 py-0.5 rounded bg-emerald-500/10">Active</span>
+                        <span className="text-[10px] text-emerald-400 px-1.5 py-0.5 rounded bg-emerald-500/10">Live Product</span>
                       </div>
                       <p className="text-[11px] text-[#9ca3af] mt-1 font-sans">
-                        VTU web portal for purchasing MTN, Airtel, Glo &amp; 9mobile data/airtime.
+                        VTU &amp; data selling platform — live at zapdata.com.ng
                       </p>
                     </div>
 
                     <div className="p-2.5 rounded bg-[#141620] border border-[#1d222e]">
                       <div className="flex items-center justify-between text-[#f4f5f8] font-bold">
-                        <span>2. Campus Marketplace</span>
-                        <span className="text-[10px] text-blue-400 px-1.5 py-0.5 rounded bg-blue-500/10">Active</span>
+                        <span>2. Suleman Fashion Store</span>
+                        <span className="text-[10px] text-amber-400 px-1.5 py-0.5 rounded bg-amber-500/10">Client Delivery</span>
                       </div>
                       <p className="text-[11px] text-[#9ca3af] mt-1 font-sans">
-                        Student peer exchange for textbooks, gadgets &amp; dorm essentials with WhatsApp handoff.
-                      </p>
-                    </div>
-
-                    <div className="p-2.5 rounded bg-[#141620] border border-[#1d222e]">
-                      <div className="flex items-center justify-between text-[#f4f5f8] font-bold">
-                        <span>3. Fashion Lookbook</span>
-                        <span className="text-[10px] text-amber-400 px-1.5 py-0.5 rounded bg-amber-500/10">Showcase</span>
-                      </div>
-                      <p className="text-[11px] text-[#9ca3af] mt-1 font-sans">
-                        Responsive fashion catalog with sizing specifications and collection browsing.
+                        E-commerce storefront delivered for a fashion brand client.
                       </p>
                     </div>
                   </div>
@@ -215,13 +260,13 @@ export default function Hero() {
                 {activeTab === 'terminal' && (
                   <div className="text-[#9ca3af] space-y-2">
                     <div className="text-[#5b6270]">$ whoami</div>
-                    <div className="text-blue-400 font-bold">Martins Moses (martinssqeel-maker)</div>
-                    <div className="pt-1 text-[#5b6270]">$ git branch --show-current</div>
-                    <div className="text-[#f4f5f8]">arena/01a0beed-my-portfolio</div>
-                    <div className="pt-1 text-[#5b6270]">$ git log -1 --oneline</div>
-                    <div className="text-[#eceef2]">cb3856b Create My portfolio</div>
+                    <div className="text-blue-400 font-bold">Martins Moses (Martinssqeel)</div>
+                    <div className="pt-1 text-[#5b6270]">$ echo $ROLE</div>
+                    <div className="text-[#f4f5f8]">Frontend Developer &amp; Web Product Builder</div>
+                    <div className="pt-1 text-[#5b6270]">$ cat products.txt</div>
+                    <div className="text-[#eceef2]">zapdata.com.ng · suleman fashion store</div>
                     <div className="pt-1 text-[#5b6270]">$ code --status</div>
-                    <div className="text-emerald-400">VS Code: workspace active</div>
+                    <div className="text-emerald-400">VS Code: workspace active · shipping</div>
                   </div>
                 )}
 
@@ -253,11 +298,11 @@ export default function Hero() {
 
               {/* Console Footer */}
               <div className="px-5 py-2.5 bg-[#0d0e12] border-t border-[#1f222c] flex items-center justify-between text-[11px] font-mono text-[#5b6270]">
-                <span>Grounded in practical building</span>
-                <span className="text-emerald-400">100% authentic</span>
+                <span>Grounded in shipping products</span>
+                <span className="text-emerald-400">live &amp; client-ready</span>
               </div>
             </div>
-          </div>
+          </motion.div>
 
         </div>
       </div>
