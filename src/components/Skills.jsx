@@ -1,10 +1,67 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { personalData } from '../data/portfolioData';
-import { Cpu, Layout, Wrench, Code2 } from 'lucide-react';
+import { fetchSkills } from '../services/api';
+import { Cpu, Layout, Wrench, Code2, Database } from 'lucide-react';
 
 export default function Skills() {
-  const { skills } = personalData;
+  const [skillsList, setSkillsList] = useState(personalData.skills);
+  const [isLiveFromDb, setIsLiveFromDb] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState('All');
+
+  useEffect(() => {
+    let mounted = true;
+    fetchSkills()
+      .then((res) => {
+        if (mounted && res && res.data && res.data.length > 0) {
+          // Re-group from flat array
+          const categoryOrder = [
+            'Core Web Development',
+            'Frameworks & Client Architecture',
+            'Programming & Foundations',
+            'Developer Tools & Environment',
+          ];
+
+          const categoryDescriptions = {
+            'Core Web Development': 'Fundamental languages and technologies used daily to construct responsive web pages',
+            'Frameworks & Client Architecture': 'Component-driven tools for structuring dynamic user interfaces',
+            'Programming & Foundations': 'Core logic, scripting, and algorithmic problem-solving',
+            'Developer Tools & Environment': 'Everyday workflow and version control tools',
+          };
+
+          const groupedMap = {};
+          res.data.forEach((item) => {
+            if (!groupedMap[item.category]) {
+              groupedMap[item.category] = [];
+            }
+            groupedMap[item.category].push({
+              name: item.name,
+              level: item.level || 'Working Knowledge',
+              note: item.note || '',
+            });
+          });
+
+          const formatted = Object.keys(groupedMap).map((cat) => ({
+            category: cat,
+            description: categoryDescriptions[cat] || 'Technical competencies and tools',
+            items: groupedMap[cat],
+          })).sort((a, b) => {
+            const indexA = categoryOrder.indexOf(a.category);
+            const indexB = categoryOrder.indexOf(b.category);
+            return (indexA === -1 ? 99 : indexA) - (indexB === -1 ? 99 : indexB);
+          });
+
+          setSkillsList(formatted);
+          setIsLiveFromDb(true);
+        }
+      })
+      .catch((err) => {
+        console.warn('Backend API notice: using fallback skills data.', err.message);
+      });
+
+    return () => {
+      mounted = false;
+    };
+  }, []);
 
   const categoryIcons = {
     'Core Web Development': Layout,
@@ -13,12 +70,12 @@ export default function Skills() {
     'Developer Tools & Environment': Wrench,
   };
 
-  const categories = ['All', ...skills.map((s) => s.category)];
+  const categories = ['All', ...skillsList.map((s) => s.category)];
 
   const displayedSkills =
     selectedCategory === 'All'
-      ? skills
-      : skills.filter((s) => s.category === selectedCategory);
+      ? skillsList
+      : skillsList.filter((s) => s.category === selectedCategory);
 
   return (
     <section id="skills" className="py-24 sm:py-32 border-b border-[#1f222c] bg-[#0c0d10]">
@@ -27,9 +84,17 @@ export default function Skills() {
         {/* Section Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
           <div>
-            <span className="font-mono text-xs uppercase tracking-wider text-blue-400 mb-2 block">
-              02 / Technical Stack &amp; Tools
-            </span>
+            <div className="flex items-center gap-2 mb-2">
+              <span className="font-mono text-xs uppercase tracking-wider text-blue-400 block">
+                02 / Technical Stack &amp; Tools
+              </span>
+              {isLiveFromDb && (
+                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-mono bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                  <Database size={10} />
+                  <span>database synced</span>
+                </span>
+              )}
+            </div>
             <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-[#f4f5f8]">
               Verified Skills &amp; Tools
             </h2>

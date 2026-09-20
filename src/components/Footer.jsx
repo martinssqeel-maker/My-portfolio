@@ -3,7 +3,7 @@ import { personalData } from '../data/portfolioData';
 import { ArrowUp, Mail } from 'lucide-react';
 import { GithubIcon } from './Icons';
 
-export default function Footer() {
+export default function Footer({ onOpenAdmin }) {
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -59,15 +59,21 @@ export default function Footer() {
 
         </div>
 
-        {/* Bottom Credits */}
+        {/* Bottom Credits & Admin Console Trigger */}
         <div className="pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs font-mono text-[#5b6270]">
           <div>
             &copy; {currentYear} {personalData.name}. All rights reserved.
           </div>
-          <div className="flex items-center gap-2">
-            <span>Built with React 19 &amp; Vite</span>
+          <div className="flex items-center gap-3">
+            <span>Full-Stack Node + React + SQLite</span>
             <span>·</span>
-            <span>Zero AI template boilerplate</span>
+            <button
+              type="button"
+              onClick={onOpenAdmin}
+              className="hover:text-white transition-colors underline decoration-dotted"
+            >
+              Admin Console
+            </button>
           </div>
         </div>
       </div>

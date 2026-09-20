@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { personalData } from '../data/portfolioData';
-import { Copy, Check, Send, MessageSquare, ArrowUpRight } from 'lucide-react';
+import { submitContactMessage } from '../services/api';
+import { Copy, Check, Send, MessageSquare, ArrowUpRight, AlertCircle, RefreshCw } from 'lucide-react';
 import { GithubIcon } from './Icons';
 
 export default function Contact() {
   const [copied, setCopied] = useState(false);
-  const [formData, setFormData] = useState({ name: '', email: '', message: '' });
-  const [submitted, setSubmitted] = useState(false);
-  const [submitting, setSubmitting] = useState(false);
+  const [formData, setFormData] = useState({ name: '', email: '', subject: '', message: '' });
+  const [status, setStatus] = useState({ state: 'idle', message: '' }); // idle, sending, success, error
 
   const copyEmail = () => {
     navigator.clipboard.writeText(personalData.email);
@@ -15,15 +15,32 @@ export default function Contact() {
     setTimeout(() => setCopied(false), 2400);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formData.name || !formData.email || !formData.message) return;
 
-    setSubmitting(true);
-    setTimeout(() => {
-      setSubmitting(false);
-      setSubmitted(true);
-    }, 700);
+    setStatus({ state: 'sending', message: 'Sending message securely to server...' });
+
+    try {
+      const result = await submitContactMessage({
+        name: formData.name,
+        email: formData.email,
+        subject: formData.subject || 'Portfolio Inquiry',
+        message: formData.message,
+      });
+
+      setStatus({
+        state: 'success',
+        message: result.message || 'Your message has been sent successfully and stored in the database!',
+      });
+      setFormData({ name: '', email: '', subject: '', message: '' });
+    } catch (err) {
+      console.error('Contact submission error:', err);
+      setStatus({
+        state: 'error',
+        message: err.message || 'Something went wrong. Please try again or email directly.',
+      });
+    }
   };
 
   return (
@@ -126,12 +143,12 @@ export default function Contact() {
                 <span>Status: Actively Available</span>
               </div>
               Open for full-time frontend roles, contract engineering, and open-source projects.
-              Response timeframe typically within 24 hours.
+              Messages are stored securely in the portfolio database and answered within 24 hours.
             </div>
 
           </div>
 
-          {/* Right Column: Clean Functional Message Form */}
+          {/* Right Column: Real Full-Stack Message Form */}
           <div className="lg:col-span-7">
             <div className="p-6 sm:p-8 rounded-xl bg-[#101217] border border-[#1f222c]">
               
@@ -142,41 +159,45 @@ export default function Contact() {
                     Send a Message
                   </h3>
                 </div>
-                <span className="font-mono text-xs text-[#5b6270]">Direct Delivery</span>
+                <span className="font-mono text-xs text-emerald-400">API &amp; Database Connected</span>
               </div>
 
-              {submitted ? (
+              {status.state === 'success' ? (
                 <div className="p-8 text-center space-y-4">
                   <div className="w-12 h-12 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center justify-center mx-auto">
                     <Check size={24} />
                   </div>
                   <h4 className="text-lg font-bold text-[#f4f5f8]">
-                    Message Prepared
+                    Message Sent &amp; Recorded
                   </h4>
                   <p className="text-sm text-[#9ca3af] max-w-md mx-auto">
-                    Thank you, {formData.name}. You can also dispatch directly to{' '}
-                    <span className="text-white font-mono">{personalData.email}</span>.
+                    {status.message}
                   </p>
                   <button
                     type="button"
-                    onClick={() => {
-                      setSubmitted(false);
-                      setFormData({ name: '', email: '', message: '' });
-                    }}
+                    onClick={() => setStatus({ state: 'idle', message: '' })}
                     className="px-4 py-2 rounded-lg text-xs font-mono bg-[#161820] text-[#9ca3af] hover:text-white border border-[#1f222c]"
                   >
-                    Send another note
+                    Send another message
                   </button>
                 </div>
               ) : (
                 <form onSubmit={handleSubmit} className="space-y-4">
+                  
+                  {status.state === 'error' && (
+                    <div className="p-3.5 rounded-lg bg-red-500/10 border border-red-500/30 text-red-400 text-xs font-mono flex items-center gap-2">
+                      <AlertCircle size={15} className="shrink-0" />
+                      <span>{status.message}</span>
+                    </div>
+                  )}
+
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                       <label
                         htmlFor="name"
                         className="block text-xs font-mono text-[#9ca3af] mb-1.5"
                       >
-                        Your Name
+                        Your Name *
                       </label>
                       <input
                         id="name"
@@ -194,7 +215,7 @@ export default function Contact() {
                         htmlFor="email"
                         className="block text-xs font-mono text-[#9ca3af] mb-1.5"
                       >
-                        Email Address
+                        Email Address *
                       </label>
                       <input
                         id="email"
@@ -210,10 +231,27 @@ export default function Contact() {
 
                   <div>
                     <label
+                      htmlFor="subject"
+                      className="block text-xs font-mono text-[#9ca3af] mb-1.5"
+                    >
+                      Subject (Optional)
+                    </label>
+                    <input
+                      id="subject"
+                      type="text"
+                      value={formData.subject}
+                      onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
+                      placeholder="Frontend Engineering Opportunity"
+                      className="w-full px-3.5 py-2.5 rounded-lg bg-[#14161d] border border-[#1f222c] text-sm text-[#f4f5f8] placeholder-[#5b6270] focus:border-blue-500 focus:outline-none transition-colors"
+                    />
+                  </div>
+
+                  <div>
+                    <label
                       htmlFor="message"
                       className="block text-xs font-mono text-[#9ca3af] mb-1.5"
                     >
-                      Project or Opportunity Details
+                      Message *
                     </label>
                     <textarea
                       id="message"
@@ -221,22 +259,31 @@ export default function Contact() {
                       required
                       value={formData.message}
                       onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                      placeholder="Hi Martins, we're building a web product and would love to discuss a frontend role..."
+                      placeholder="Hi Martins, I'd like to discuss a project..."
                       className="w-full px-3.5 py-2.5 rounded-lg bg-[#14161d] border border-[#1f222c] text-sm text-[#f4f5f8] placeholder-[#5b6270] focus:border-blue-500 focus:outline-none transition-colors resize-none"
                     />
                   </div>
 
                   <div className="pt-2 flex items-center justify-between">
                     <span className="text-[11px] font-mono text-[#5b6270]">
-                      No third-party trackers or spam
+                      Protected against spam &amp; stored safely
                     </span>
                     <button
                       type="submit"
-                      disabled={submitting}
+                      disabled={status.state === 'sending'}
                       className="inline-flex items-center gap-2 px-6 py-2.5 rounded-lg text-sm font-semibold bg-[#f4f5f8] text-[#090a0d] hover:bg-white transition-all disabled:opacity-50 active:scale-[0.98]"
                     >
-                      <span>{submitting ? 'Sending...' : 'Send Message'}</span>
-                      <Send size={14} />
+                      {status.state === 'sending' ? (
+                        <>
+                          <RefreshCw size={14} className="animate-spin" />
+                          <span>Sending...</span>
+                        </>
+                      ) : (
+                        <>
+                          <span>Send Message</span>
+                          <Send size={14} />
+                        </>
+                      )}
                     </button>
                   </div>
                 </form>

@@ -1,0 +1,64 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String    @id @default(cuid())
+  email        String    @unique
+  passwordHash String
+  role         String    @default("admin")
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  lastLoginAt  DateTime?
+}
+
+model Project {
+  id                  String   @id @default(cuid())
+  title               String
+  slug                String   @unique
+  description         String
+  detailedDescription String?
+  technologies        String   // comma-separated or JSON string
+  imageUrl            String?
+  liveUrl             String?
+  githubUrl           String?
+  featured            Boolean  @default(false)
+  displayOrder        Int      @default(0)
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+}
+
+model ContactMessage {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  subject   String?  @default("Portfolio Inquiry")
+  message   String
+  status    String   @default("unread") // unread, read, archived
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Skill {
+  id           String   @id @default(cuid())
+  name         String
+  category     String
+  displayOrder Int      @default(0)
+  createdAt    DateTime @default(now())
+}
+
+model Experience {
+  id           String   @id @default(cuid())
+  title        String
+  organization String
+  description  String
+  startDate    String?
+  endDate      String?
+  displayOrder Int      @default(0)
+  createdAt    DateTime @default(now())
+}

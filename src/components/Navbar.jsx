@@ -1,12 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import { personalData } from '../data/portfolioData';
-import { Menu, X, ArrowUpRight } from 'lucide-react';
+import { Menu, X, ArrowUpRight, Lock } from 'lucide-react';
 import { GithubIcon } from './Icons';
 
-export default function Navbar() {
+export default function Navbar({ onOpenAdmin }) {
   const [activeSection, setActiveSection] = useState('hero');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.shiftKey && e.key.toLowerCase() === 'a') {
+        e.preventDefault();
+        if (onOpenAdmin) onOpenAdmin();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [onOpenAdmin]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -99,6 +110,15 @@ export default function Navbar() {
 
         {/* Right Action */}
         <div className="hidden md:flex items-center gap-3">
+          <button
+            type="button"
+            onClick={onOpenAdmin}
+            className="p-1.5 rounded-md text-[#5b6270] hover:text-[#9ca3af] hover:bg-[#161820] transition-colors"
+            title="Admin Console (Ctrl+Shift+A)"
+            aria-label="Admin Console"
+          >
+            <Lock size={13} />
+          </button>
           <a
             href={personalData.github}
             target="_blank"
@@ -178,6 +198,14 @@ export default function Navbar() {
             >
               Start Conversation
             </a>
+            <button
+              type="button"
+              onClick={() => { setMobileMenuOpen(false); onOpenAdmin(); }}
+              className="flex items-center justify-center gap-1.5 w-full py-2 rounded-lg text-xs font-mono text-[#5b6270] hover:text-[#9ca3af] transition-colors"
+            >
+              <Lock size={12} />
+              <span>Admin Console</span>
+            </button>
           </div>
         </div>
       )}
