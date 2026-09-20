@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
 import { db } from '../db/database.js';
 
-export function requireAuth(req, res, next) {
+export async function requireAuth(req, res, next) {
   try {
     let token = null;
 
@@ -24,7 +24,10 @@ export function requireAuth(req, res, next) {
     const decoded = jwt.verify(token, secret);
 
     // Verify user exists in database and is active
-    const user = db.prepare('SELECT id, email, role, createdAt, lastLoginAt FROM users WHERE id = ?').get(decoded.id);
+    const user = await db.get(
+      'SELECT "id", "email", "role", "createdAt", "lastLoginAt" FROM users WHERE "id" = ?',
+      [decoded.id]
+    );
 
     if (!user) {
       return res.status(401).json({

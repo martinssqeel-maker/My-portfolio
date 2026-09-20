@@ -7,13 +7,14 @@ import { requireAuth, requireAdmin } from '../middleware/auth.js';
 import { loginLimiter } from '../middleware/rateLimit.js';
 
 const router = Router();
-const JWT_SECRET = process.env.JWT_SECRET || 'martins-portfolio-jwt-secret-key-replace-in-production-2026';
+
+function generateId(prefix = '') {
+  return `${prefix}${crypto.randomBytes(8).toString('hex')}`;
+}
 
 // -------------------------------------------------------------
-// Authentication Routes
-// -------------------------------------------------------------
-
 // POST /api/admin/login
+// -------------------------------------------------------------
 router.post('/login', loginLimiter, async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -26,7 +27,7 @@ router.post('/login', loginLimiter, async (req, res) => {
     }
 
     const cleanEmail = email.trim().toLowerCase();
-    const user = db.prepare('SELECT * FROM users WHERE email = ?').get(cleanEmail);
+    const user = await db.get('SELECT * FROM users WHERE "email" = ?', [cleanEmail]);
 
     if (!user) {
       return res.status(401).json({
@@ -35,31 +36,36 @@ router.post('/login', loginLimiter, async (req, res) => {
       });
     }
 
-    const passwordMatch = await bcrypt.compare(password, user.passwordHash);
-    if (!passwordMatch) {
+    const match = await bcrypt.compare(password, user.passwordHash);
+    if (!match) {
       return res.status(401).json({
         success: false,
         error: 'Invalid credentials.',
       });
     }
 
-    // Update lastLoginAt
+    // Update last login
     const now = new Date().toISOString();
-    db.prepare('UPDATE users SET lastLoginAt = ?, updatedAt = ? WHERE id = ?').run(now, now, user.id);
+    await db.run('UPDATE users SET "lastLoginAt" = ?, "updatedAt" = ? WHERE "id" = ?', [now, now, user.id]);
 
-    // Sign JWT token (24-hour expiration)
+    // Issue JWT
+    const secret = process.env.JWT_SECRET || 'martins-portfolio-jwt-secret-key-replace-in-production-2026';
     const token = jwt.sign(
-      { id: user.id, email: user.email, role: user.role },
-      JWT_SECRET,
-      { expiresIn: '24h' }
+      {
+        id: user.id,
+        email: user.email,
+        role: user.role,
+      },
+      secret,
+      { expiresIn: '7d' }
     );
 
-    // Set secure httpOnly cookie (and also return in JSON for client flexibility)
+    // Set secure HTTP-only cookie
     res.cookie('token', token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
-      maxAge: 24 * 60 * 60 * 1000,
+      maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
     res.json({
@@ -70,19 +76,20 @@ router.post('/login', loginLimiter, async (req, res) => {
         id: user.id,
         email: user.email,
         role: user.role,
-        lastLoginAt: now,
       },
     });
   } catch (err) {
     console.error('Login error:', err);
     res.status(500).json({
       success: false,
-      error: 'An unexpected error occurred during authentication.',
+      error: 'An internal error occurred during authentication.',
     });
   }
 });
 
+// -------------------------------------------------------------
 // POST /api/admin/logout
+// -------------------------------------------------------------
 router.post('/logout', (req, res) => {
   res.clearCookie('token');
   res.json({
@@ -91,54 +98,9 @@ router.post('/logout', (req, res) => {
   });
 });
 
-// POST /api/admin/change-password - Secure password update for administrator
-router.post('/change-password', requireAdmin, async (req, res) => {
-  try {
-    const { currentPassword, newPassword } = req.body;
-
-    if (!currentPassword || !newPassword) {
-      return res.status(400).json({
-        success: false,
-        error: 'Current password and new password are required.',
-      });
-    }
-
-    if (newPassword.length < 8) {
-      return res.status(400).json({
-        success: false,
-        error: 'New password must be at least 8 characters long.',
-      });
-    }
-
-    const user = db.prepare('SELECT * FROM users WHERE id = ?').get(req.user.id);
-    if (!user) {
-      return res.status(404).json({ success: false, error: 'User not found.' });
-    }
-
-    const match = await bcrypt.compare(currentPassword, user.passwordHash);
-    if (!match) {
-      return res.status(401).json({
-        success: false,
-        error: 'Current password is incorrect.',
-      });
-    }
-
-    const newHash = await bcrypt.hash(newPassword, 10);
-    const now = new Date().toISOString();
-
-    db.prepare('UPDATE users SET passwordHash = ?, updatedAt = ? WHERE id = ?').run(newHash, now, user.id);
-
-    res.json({
-      success: true,
-      message: 'Password successfully updated.',
-    });
-  } catch (err) {
-    console.error('Password change error:', err);
-    res.status(500).json({ success: false, error: 'Failed to update password.' });
-  }
-});
-
-// GET /api/admin/me - Verify current session
+// -------------------------------------------------------------
+// GET /api/admin/me
+// -------------------------------------------------------------
 router.get('/me', requireAuth, (req, res) => {
   res.json({
     success: true,
@@ -146,45 +108,103 @@ router.get('/me', requireAuth, (req, res) => {
       id: req.user.id,
       email: req.user.email,
       role: req.user.role,
+      createdAt: req.user.createdAt,
       lastLoginAt: req.user.lastLoginAt,
     },
   });
 });
 
 // -------------------------------------------------------------
-// Admin Dashboard Stats
+// POST /api/admin/change-password
 // -------------------------------------------------------------
-
-// GET /api/admin/stats - Real database metrics
-router.get('/stats', requireAdmin, (req, res) => {
+router.post('/change-password', requireAuth, async (req, res) => {
   try {
-    const totalProjects = db.prepare('SELECT COUNT(*) as c FROM projects').get().c;
-    const featuredProjects = db.prepare('SELECT COUNT(*) as c FROM projects WHERE featured = 1').get().c;
-    const totalMessages = db.prepare('SELECT COUNT(*) as c FROM contact_messages').get().c;
-    const unreadMessages = db.prepare("SELECT COUNT(*) as c FROM contact_messages WHERE status = 'unread'").get().c;
-    const totalSkills = db.prepare('SELECT COUNT(*) as c FROM skills').get().c;
+    const { currentPassword, newPassword } = req.body;
 
-    const recentMessages = db.prepare(`
-      SELECT id, name, email, subject, status, createdAt
+    if (!currentPassword || !newPassword) {
+      return res.status(400).json({
+        success: false,
+        error: 'Current password and new password are both required.',
+      });
+    }
+
+    if (typeof newPassword !== 'string' || newPassword.length < 8) {
+      return res.status(400).json({
+        success: false,
+        error: 'New password must be at least 8 characters long.',
+      });
+    }
+
+    // Verify current user password
+    const user = await db.get('SELECT * FROM users WHERE "id" = ?', [req.user.id]);
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        error: 'User not found.',
+      });
+    }
+
+    const isValid = await bcrypt.compare(currentPassword, user.passwordHash);
+    if (!isValid) {
+      return res.status(401).json({
+        success: false,
+        error: 'Incorrect current password.',
+      });
+    }
+
+    // Hash new password and persist
+    const newHash = await bcrypt.hash(newPassword, 10);
+    const now = new Date().toISOString();
+    await db.run('UPDATE users SET "passwordHash" = ?, "updatedAt" = ? WHERE "id" = ?', [newHash, now, user.id]);
+
+    res.json({
+      success: true,
+      message: 'Password successfully updated.',
+    });
+  } catch (err) {
+    console.error('Password change error:', err);
+    res.status(500).json({
+      success: false,
+      error: 'Unable to update password at this time.',
+    });
+  }
+});
+
+// -------------------------------------------------------------
+// GET /api/admin/stats
+// -------------------------------------------------------------
+router.get('/stats', requireAuth, async (req, res) => {
+  try {
+    const totalProjectsRow = await db.get('SELECT COUNT(*) as c FROM projects');
+    const featuredProjectsRow = await db.get('SELECT COUNT(*) as c FROM projects WHERE "featured" = 1');
+    const totalMessagesRow = await db.get('SELECT COUNT(*) as c FROM contact_messages');
+    const unreadMessagesRow = await db.get("SELECT COUNT(*) as c FROM contact_messages WHERE \"status\" = 'unread'");
+    const totalSkillsRow = await db.get('SELECT COUNT(*) as c FROM skills');
+
+    const recentMessages = await db.all(`
+      SELECT "id", "name", "email", "subject", "status", "createdAt"
       FROM contact_messages
-      ORDER BY createdAt DESC
+      ORDER BY "createdAt" DESC
       LIMIT 5
-    `).all();
+    `);
 
     res.json({
       success: true,
       data: {
-        totalProjects,
-        featuredProjects,
-        totalMessages,
-        unreadMessages,
-        totalSkills,
+        totalProjects: parseInt(totalProjectsRow?.c || 0, 10),
+        featuredProjects: parseInt(featuredProjectsRow?.c || 0, 10),
+        totalMessages: parseInt(totalMessagesRow?.c || 0, 10),
+        unreadMessages: parseInt(unreadMessagesRow?.c || 0, 10),
+        totalSkills: parseInt(totalSkillsRow?.c || 0, 10),
         recentMessages,
       },
     });
   } catch (err) {
     console.error('Error fetching admin stats:', err);
-    res.status(500).json({ success: false, error: 'Could not calculate statistics.' });
+    res.status(500).json({
+      success: false,
+      error: 'Unable to load dashboard statistics.',
+    });
   }
 });
 
@@ -193,19 +213,20 @@ router.get('/stats', requireAdmin, (req, res) => {
 // -------------------------------------------------------------
 
 // GET /api/admin/messages
-router.get('/messages', requireAdmin, (req, res) => {
+router.get('/messages', requireAuth, async (req, res) => {
   try {
     const { status } = req.query;
     let query = 'SELECT * FROM contact_messages';
     const params = [];
 
     if (status && status !== 'all') {
-      query += ' WHERE status = ?';
+      query += ' WHERE "status" = ?';
       params.push(status);
     }
 
-    query += ' ORDER BY createdAt DESC';
-    const messages = db.prepare(query).all(...params);
+    query += ' ORDER BY "createdAt" DESC';
+
+    const messages = await db.all(query, params);
 
     res.json({
       success: true,
@@ -213,51 +234,75 @@ router.get('/messages', requireAdmin, (req, res) => {
     });
   } catch (err) {
     console.error('Error fetching messages:', err);
-    res.status(500).json({ success: false, error: 'Failed to retrieve messages.' });
+    res.status(500).json({
+      success: false,
+      error: 'Unable to retrieve messages.',
+    });
   }
 });
 
-// PATCH /api/admin/messages/:id - Update status (read, unread, archived)
-router.patch('/messages/:id', requireAdmin, (req, res) => {
+// PATCH /api/admin/messages/:id - update message status
+router.patch('/messages/:id', requireAuth, async (req, res) => {
   try {
     const { status } = req.body;
-    const allowed = ['unread', 'read', 'archived'];
-    if (!allowed.includes(status)) {
-      return res.status(400).json({ success: false, error: 'Invalid status value.' });
+    const validStatuses = ['unread', 'read', 'archived', 'replied'];
+
+    if (!validStatuses.includes(status)) {
+      return res.status(400).json({
+        success: false,
+        error: 'Invalid status. Must be unread, read, archived, or replied.',
+      });
     }
 
     const now = new Date().toISOString();
-    const result = db.prepare(`
+    const result = await db.run(`
       UPDATE contact_messages
-      SET status = ?, updatedAt = ?
-      WHERE id = ?
-    `).run(status, now, req.params.id);
+      SET "status" = ?, "updatedAt" = ?
+      WHERE "id" = ?
+    `, [status, now, req.params.id]);
 
     if (result.changes === 0) {
-      return res.status(404).json({ success: false, error: 'Message not found.' });
+      return res.status(404).json({
+        success: false,
+        error: 'Message not found.',
+      });
     }
 
     res.json({
       success: true,
-      message: `Message status updated to ${status}.`,
+      message: `Message marked as ${status}.`,
     });
   } catch (err) {
-    console.error('Error updating message:', err);
-    res.status(500).json({ success: false, error: 'Failed to update message.' });
+    console.error('Error updating message status:', err);
+    res.status(500).json({
+      success: false,
+      error: 'Failed to update message status.',
+    });
   }
 });
 
 // DELETE /api/admin/messages/:id
-router.delete('/messages/:id', requireAdmin, (req, res) => {
+router.delete('/messages/:id', requireAuth, async (req, res) => {
   try {
-    const result = db.prepare('DELETE FROM contact_messages WHERE id = ?').run(req.params.id);
+    const result = await db.run('DELETE FROM contact_messages WHERE "id" = ?', [req.params.id]);
+
     if (result.changes === 0) {
-      return res.status(404).json({ success: false, error: 'Message not found.' });
+      return res.status(404).json({
+        success: false,
+        error: 'Message not found.',
+      });
     }
-    res.json({ success: true, message: 'Message deleted successfully.' });
+
+    res.json({
+      success: true,
+      message: 'Message permanently deleted.',
+    });
   } catch (err) {
     console.error('Error deleting message:', err);
-    res.status(500).json({ success: false, error: 'Failed to delete message.' });
+    res.status(500).json({
+      success: false,
+      error: 'Failed to delete message.',
+    });
   }
 });
 
@@ -265,41 +310,53 @@ router.delete('/messages/:id', requireAdmin, (req, res) => {
 // Projects Management
 // -------------------------------------------------------------
 
-// POST /api/admin/projects - Create a project
-router.post('/projects', requireAdmin, (req, res) => {
+// POST /api/admin/projects
+router.post('/projects', requireAdmin, async (req, res) => {
   try {
-    const { title, slug, description, detailedDescription, technologies, imageUrl, liveUrl, githubUrl, featured, displayOrder } = req.body;
+    const {
+      title,
+      slug,
+      description,
+      detailedDescription,
+      technologies,
+      imageUrl,
+      liveUrl,
+      githubUrl,
+      featured,
+      displayOrder,
+    } = req.body;
 
-    if (!title || !description) {
-      return res.status(400).json({ success: false, error: 'Title and description are required.' });
+    if (!title || !slug || !description) {
+      return res.status(400).json({
+        success: false,
+        error: 'Title, slug, and description are required.',
+      });
     }
 
-    const cleanSlug = (slug || title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, ''));
-    const id = `prj_${crypto.randomBytes(8).toString('hex')}`;
+    const id = generateId('prj_');
     const now = new Date().toISOString();
+    const techs = Array.isArray(technologies) ? JSON.stringify(technologies) : JSON.stringify([technologies].filter(Boolean));
 
-    const techString = Array.isArray(technologies) ? JSON.stringify(technologies) : (technologies || '[]');
-
-    db.prepare(`
+    await db.run(`
       INSERT INTO projects (
-        id, title, slug, description, detailedDescription, technologies,
-        imageUrl, liveUrl, githubUrl, featured, displayOrder, createdAt, updatedAt
+        "id", "title", "slug", "description", "detailedDescription", "technologies",
+        "imageUrl", "liveUrl", "githubUrl", "featured", "displayOrder", "createdAt", "updatedAt"
       ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-    `).run(
+    `, [
       id,
       title.trim(),
-      cleanSlug,
+      slug.trim().toLowerCase(),
       description.trim(),
-      detailedDescription ? detailedDescription.trim() : null,
-      techString,
-      imageUrl || null,
-      liveUrl || null,
-      githubUrl || null,
+      detailedDescription || '',
+      techs,
+      imageUrl || '',
+      liveUrl || '',
+      githubUrl || '',
       featured ? 1 : 0,
-      displayOrder || 0,
+      parseInt(displayOrder || 0, 10),
       now,
-      now
-    );
+      now,
+    ]);
 
     res.status(201).json({
       success: true,
@@ -307,77 +364,113 @@ router.post('/projects', requireAdmin, (req, res) => {
       id,
     });
   } catch (err) {
-    if (err.message && err.message.includes('UNIQUE constraint failed')) {
-      return res.status(409).json({ success: false, error: 'A project with this slug already exists.' });
-    }
     console.error('Error creating project:', err);
-    res.status(500).json({ success: false, error: 'Failed to create project.' });
+    if (err.message && err.message.includes('UNIQUE')) {
+      return res.status(409).json({
+        success: false,
+        error: 'A project with this slug already exists.',
+      });
+    }
+    res.status(500).json({
+      success: false,
+      error: 'Failed to create project.',
+    });
   }
 });
 
-// PATCH /api/admin/projects/:id - Edit a project
-router.patch('/projects/:id', requireAdmin, (req, res) => {
+// PATCH /api/admin/projects/:id
+router.patch('/projects/:id', requireAdmin, async (req, res) => {
   try {
-    const { title, slug, description, detailedDescription, technologies, imageUrl, liveUrl, githubUrl, featured, displayOrder } = req.body;
-
-    const existing = db.prepare('SELECT * FROM projects WHERE id = ?').get(req.params.id);
+    const existing = await db.get('SELECT * FROM projects WHERE "id" = ?', [req.params.id]);
     if (!existing) {
-      return res.status(404).json({ success: false, error: 'Project not found.' });
+      return res.status(404).json({
+        success: false,
+        error: 'Project not found.',
+      });
     }
 
+    const {
+      title,
+      slug,
+      description,
+      detailedDescription,
+      technologies,
+      imageUrl,
+      liveUrl,
+      githubUrl,
+      featured,
+      displayOrder,
+    } = req.body;
+
     const now = new Date().toISOString();
-    const updatedTitle = title !== undefined ? title.trim() : existing.title;
-    const updatedSlug = slug !== undefined ? slug.trim() : existing.slug;
-    const updatedDesc = description !== undefined ? description.trim() : existing.description;
-    const updatedDetail = detailedDescription !== undefined ? detailedDescription : existing.detailedDescription;
-    const updatedTech = technologies !== undefined
-      ? (Array.isArray(technologies) ? JSON.stringify(technologies) : technologies)
+    const techs = technologies !== undefined
+      ? (Array.isArray(technologies) ? JSON.stringify(technologies) : JSON.stringify([technologies]))
       : existing.technologies;
-    const updatedImage = imageUrl !== undefined ? imageUrl : existing.imageUrl;
-    const updatedLive = liveUrl !== undefined ? liveUrl : existing.liveUrl;
-    const updatedGithub = githubUrl !== undefined ? githubUrl : existing.githubUrl;
-    const updatedFeatured = featured !== undefined ? (featured ? 1 : 0) : existing.featured;
-    const updatedOrder = displayOrder !== undefined ? parseInt(displayOrder, 10) : existing.displayOrder;
 
-    db.prepare(`
+    await db.run(`
       UPDATE projects SET
-        title = ?, slug = ?, description = ?, detailedDescription = ?,
-        technologies = ?, imageUrl = ?, liveUrl = ?, githubUrl = ?,
-        featured = ?, displayOrder = ?, updatedAt = ?
-      WHERE id = ?
-    `).run(
-      updatedTitle,
-      updatedSlug,
-      updatedDesc,
-      updatedDetail,
-      updatedTech,
-      updatedImage,
-      updatedLive,
-      updatedGithub,
-      updatedFeatured,
-      updatedOrder,
+        "title" = ?,
+        "slug" = ?,
+        "description" = ?,
+        "detailedDescription" = ?,
+        "technologies" = ?,
+        "imageUrl" = ?,
+        "liveUrl" = ?,
+        "githubUrl" = ?,
+        "featured" = ?,
+        "displayOrder" = ?,
+        "updatedAt" = ?
+      WHERE "id" = ?
+    `, [
+      title !== undefined ? title.trim() : existing.title,
+      slug !== undefined ? slug.trim().toLowerCase() : existing.slug,
+      description !== undefined ? description.trim() : existing.description,
+      detailedDescription !== undefined ? detailedDescription : existing.detailedDescription,
+      techs,
+      imageUrl !== undefined ? imageUrl : existing.imageUrl,
+      liveUrl !== undefined ? liveUrl : existing.liveUrl,
+      githubUrl !== undefined ? githubUrl : existing.githubUrl,
+      featured !== undefined ? (featured ? 1 : 0) : existing.featured,
+      displayOrder !== undefined ? parseInt(displayOrder, 10) : existing.displayOrder,
       now,
-      req.params.id
-    );
+      req.params.id,
+    ]);
 
-    res.json({ success: true, message: 'Project updated successfully.' });
+    res.json({
+      success: true,
+      message: 'Project updated successfully.',
+    });
   } catch (err) {
     console.error('Error updating project:', err);
-    res.status(500).json({ success: false, error: 'Failed to update project.' });
+    res.status(500).json({
+      success: false,
+      error: 'Failed to update project.',
+    });
   }
 });
 
 // DELETE /api/admin/projects/:id
-router.delete('/projects/:id', requireAdmin, (req, res) => {
+router.delete('/projects/:id', requireAdmin, async (req, res) => {
   try {
-    const result = db.prepare('DELETE FROM projects WHERE id = ?').run(req.params.id);
+    const result = await db.run('DELETE FROM projects WHERE "id" = ?', [req.params.id]);
+
     if (result.changes === 0) {
-      return res.status(404).json({ success: false, error: 'Project not found.' });
+      return res.status(404).json({
+        success: false,
+        error: 'Project not found.',
+      });
     }
-    res.json({ success: true, message: 'Project deleted successfully.' });
+
+    res.json({
+      success: true,
+      message: 'Project deleted successfully.',
+    });
   } catch (err) {
     console.error('Error deleting project:', err);
-    res.status(500).json({ success: false, error: 'Failed to delete project.' });
+    res.status(500).json({
+      success: false,
+      error: 'Failed to delete project.',
+    });
   }
 });
 
@@ -386,76 +479,112 @@ router.delete('/projects/:id', requireAdmin, (req, res) => {
 // -------------------------------------------------------------
 
 // POST /api/admin/skills
-router.post('/skills', requireAdmin, (req, res) => {
+router.post('/skills', requireAdmin, async (req, res) => {
   try {
     const { name, category, level, note, displayOrder } = req.body;
+
     if (!name || !category) {
-      return res.status(400).json({ success: false, error: 'Name and category are required.' });
+      return res.status(400).json({
+        success: false,
+        error: 'Skill name and category are required.',
+      });
     }
 
-    const id = `skl_${crypto.randomBytes(8).toString('hex')}`;
+    const id = generateId('skl_');
     const now = new Date().toISOString();
 
-    db.prepare(`
-      INSERT INTO skills (id, name, category, level, note, displayOrder, createdAt)
+    await db.run(`
+      INSERT INTO skills ("id", "name", "category", "level", "note", "displayOrder", "createdAt")
       VALUES (?, ?, ?, ?, ?, ?, ?)
-    `).run(
+    `, [
       id,
       name.trim(),
       category.trim(),
-      level ? level.trim() : 'Working Knowledge',
-      note ? note.trim() : null,
-      displayOrder || 0,
-      now
-    );
+      level || 'Working Knowledge',
+      note || '',
+      parseInt(displayOrder || 0, 10),
+      now,
+    ]);
 
-    res.status(201).json({ success: true, message: 'Skill added.', id });
+    res.status(201).json({
+      success: true,
+      message: 'Skill added successfully.',
+      id,
+    });
   } catch (err) {
-    console.error('Error creating skill:', err);
-    res.status(500).json({ success: false, error: 'Failed to add skill.' });
+    console.error('Error adding skill:', err);
+    res.status(500).json({
+      success: false,
+      error: 'Failed to create skill.',
+    });
   }
 });
 
 // PATCH /api/admin/skills/:id
-router.patch('/skills/:id', requireAdmin, (req, res) => {
+router.patch('/skills/:id', requireAdmin, async (req, res) => {
   try {
-    const { name, category, level, note, displayOrder } = req.body;
-    const existing = db.prepare('SELECT * FROM skills WHERE id = ?').get(req.params.id);
+    const existing = await db.get('SELECT * FROM skills WHERE "id" = ?', [req.params.id]);
     if (!existing) {
-      return res.status(404).json({ success: false, error: 'Skill not found.' });
+      return res.status(404).json({
+        success: false,
+        error: 'Skill not found.',
+      });
     }
 
-    db.prepare(`
+    const { name, category, level, note, displayOrder } = req.body;
+
+    await db.run(`
       UPDATE skills SET
-        name = ?, category = ?, level = ?, note = ?, displayOrder = ?
-      WHERE id = ?
-    `).run(
+        "name" = ?,
+        "category" = ?,
+        "level" = ?,
+        "note" = ?,
+        "displayOrder" = ?
+      WHERE "id" = ?
+    `, [
       name !== undefined ? name.trim() : existing.name,
       category !== undefined ? category.trim() : existing.category,
-      level !== undefined ? level.trim() : existing.level,
-      note !== undefined ? note.trim() : existing.note,
+      level !== undefined ? level : existing.level,
+      note !== undefined ? note : existing.note,
       displayOrder !== undefined ? parseInt(displayOrder, 10) : existing.displayOrder,
-      req.params.id
-    );
+      req.params.id,
+    ]);
 
-    res.json({ success: true, message: 'Skill updated successfully.' });
+    res.json({
+      success: true,
+      message: 'Skill updated successfully.',
+    });
   } catch (err) {
     console.error('Error updating skill:', err);
-    res.status(500).json({ success: false, error: 'Failed to update skill.' });
+    res.status(500).json({
+      success: false,
+      error: 'Failed to update skill.',
+    });
   }
 });
 
 // DELETE /api/admin/skills/:id
-router.delete('/skills/:id', requireAdmin, (req, res) => {
+router.delete('/skills/:id', requireAdmin, async (req, res) => {
   try {
-    const result = db.prepare('DELETE FROM skills WHERE id = ?').run(req.params.id);
+    const result = await db.run('DELETE FROM skills WHERE "id" = ?', [req.params.id]);
+
     if (result.changes === 0) {
-      return res.status(404).json({ success: false, error: 'Skill not found.' });
+      return res.status(404).json({
+        success: false,
+        error: 'Skill not found.',
+      });
     }
-    res.json({ success: true, message: 'Skill deleted successfully.' });
+
+    res.json({
+      success: true,
+      message: 'Skill deleted successfully.',
+    });
   } catch (err) {
     console.error('Error deleting skill:', err);
-    res.status(500).json({ success: false, error: 'Failed to delete skill.' });
+    res.status(500).json({
+      success: false,
+      error: 'Failed to delete skill.',
+    });
   }
 });
 
@@ -464,99 +593,157 @@ router.delete('/skills/:id', requireAdmin, (req, res) => {
 // -------------------------------------------------------------
 
 // POST /api/admin/experience
-router.post('/experience', requireAdmin, (req, res) => {
+router.post('/experience', requireAdmin, async (req, res) => {
   try {
-    const { title, organization, institution, description, startDate, endDate, contributions, skillsApplied, displayOrder } = req.body;
+    const {
+      title,
+      organization,
+      institution,
+      description,
+      startDate,
+      endDate,
+      contributions,
+      skillsApplied,
+      displayOrder,
+    } = req.body;
 
     if (!title || !organization || !description) {
-      return res.status(400).json({ success: false, error: 'Title, organization, and description are required.' });
+      return res.status(400).json({
+        success: false,
+        error: 'Title, organization, and description are required.',
+      });
     }
 
-    const id = `exp_${crypto.randomBytes(8).toString('hex')}`;
+    const id = generateId('exp_');
     const now = new Date().toISOString();
 
-    const contribString = Array.isArray(contributions) ? JSON.stringify(contributions) : (contributions || '[]');
-    const skillsString = Array.isArray(skillsApplied) ? JSON.stringify(skillsApplied) : (skillsApplied || '[]');
+    const contribs = Array.isArray(contributions) ? JSON.stringify(contributions) : '[]';
+    const skills = Array.isArray(skillsApplied) ? JSON.stringify(skillsApplied) : '[]';
 
-    db.prepare(`
+    await db.run(`
       INSERT INTO experience (
-        id, title, organization, institution, description,
-        startDate, endDate, contributions, skillsApplied, displayOrder, createdAt
+        "id", "title", "organization", "institution", "description",
+        "startDate", "endDate", "contributions", "skillsApplied", "displayOrder", "createdAt"
       ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-    `).run(
+    `, [
       id,
       title.trim(),
       organization.trim(),
-      institution ? institution.trim() : null,
+      institution || null,
       description.trim(),
-      startDate || null,
-      endDate || null,
-      contribString,
-      skillsString,
-      displayOrder || 0,
-      now
-    );
+      startDate || '',
+      endDate || '',
+      contribs,
+      skills,
+      parseInt(displayOrder || 0, 10),
+      now,
+    ]);
 
-    res.status(201).json({ success: true, message: 'Experience record added.', id });
+    res.status(201).json({
+      success: true,
+      message: 'Experience entry added.',
+      id,
+    });
   } catch (err) {
-    console.error('Error creating experience:', err);
-    res.status(500).json({ success: false, error: 'Failed to add experience record.' });
+    console.error('Error adding experience:', err);
+    res.status(500).json({
+      success: false,
+      error: 'Failed to create experience entry.',
+    });
   }
 });
 
 // PATCH /api/admin/experience/:id
-router.patch('/experience/:id', requireAdmin, (req, res) => {
+router.patch('/experience/:id', requireAdmin, async (req, res) => {
   try {
-    const { title, organization, institution, description, startDate, endDate, contributions, skillsApplied, displayOrder } = req.body;
-    const existing = db.prepare('SELECT * FROM experience WHERE id = ?').get(req.params.id);
+    const existing = await db.get('SELECT * FROM experience WHERE "id" = ?', [req.params.id]);
     if (!existing) {
-      return res.status(404).json({ success: false, error: 'Experience record not found.' });
+      return res.status(404).json({
+        success: false,
+        error: 'Experience entry not found.',
+      });
     }
 
-    const contribString = contributions !== undefined
-      ? (Array.isArray(contributions) ? JSON.stringify(contributions) : contributions)
+    const {
+      title,
+      organization,
+      institution,
+      description,
+      startDate,
+      endDate,
+      contributions,
+      skillsApplied,
+      displayOrder,
+    } = req.body;
+
+    const contribs = contributions !== undefined
+      ? (Array.isArray(contributions) ? JSON.stringify(contributions) : existing.contributions)
       : existing.contributions;
-    const skillsString = skillsApplied !== undefined
-      ? (Array.isArray(skillsApplied) ? JSON.stringify(skillsApplied) : skillsApplied)
+
+    const skills = skillsApplied !== undefined
+      ? (Array.isArray(skillsApplied) ? JSON.stringify(skillsApplied) : existing.skillsApplied)
       : existing.skillsApplied;
 
-    db.prepare(`
+    await db.run(`
       UPDATE experience SET
-        title = ?, organization = ?, institution = ?, description = ?,
-        startDate = ?, endDate = ?, contributions = ?, skillsApplied = ?,
-        displayOrder = ?
-      WHERE id = ?
-    `).run(
+        "title" = ?,
+        "organization" = ?,
+        "institution" = ?,
+        "description" = ?,
+        "startDate" = ?,
+        "endDate" = ?,
+        "contributions" = ?,
+        "skillsApplied" = ?,
+        "displayOrder" = ?
+      WHERE "id" = ?
+    `, [
       title !== undefined ? title.trim() : existing.title,
       organization !== undefined ? organization.trim() : existing.organization,
       institution !== undefined ? institution : existing.institution,
       description !== undefined ? description.trim() : existing.description,
       startDate !== undefined ? startDate : existing.startDate,
       endDate !== undefined ? endDate : existing.endDate,
-      contribString,
-      skillsString,
+      contribs,
+      skills,
       displayOrder !== undefined ? parseInt(displayOrder, 10) : existing.displayOrder,
-      req.params.id
-    );
+      req.params.id,
+    ]);
 
-    res.json({ success: true, message: 'Experience record updated successfully.' });
+    res.json({
+      success: true,
+      message: 'Experience entry updated.',
+    });
   } catch (err) {
     console.error('Error updating experience:', err);
-    res.status(500).json({ success: false, error: 'Failed to update experience record.' });
+    res.status(500).json({
+      success: false,
+      error: 'Failed to update experience entry.',
+    });
   }
 });
 
 // DELETE /api/admin/experience/:id
-router.delete('/experience/:id', requireAdmin, (req, res) => {
+router.delete('/experience/:id', requireAdmin, async (req, res) => {
   try {
-    const result = db.prepare('DELETE FROM experience WHERE id = ?').run(req.params.id);
+    const result = await db.run('DELETE FROM experience WHERE "id" = ?', [req.params.id]);
+
     if (result.changes === 0) {
-      return res.status(404).json({ success: false, error: 'Experience record not found.' });
+      return res.status(404).json({
+        success: false,
+        error: 'Experience entry not found.',
+      });
     }
-    res.json({ success: true, message: 'Experience record deleted successfully.' });
+
+    res.json({
+      success: true,
+      message: 'Experience entry deleted.',
+    });
   } catch (err) {
     console.error('Error deleting experience:', err);
-    res.status(500).json({ success: false, error: 'Failed to delete experience record.' });
+    res.status(500).json({
+      success: false,
+      error: 'Failed to delete experience entry.',
+    });
   }
 });
 

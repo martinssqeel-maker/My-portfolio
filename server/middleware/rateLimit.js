@@ -3,7 +3,7 @@ import rateLimit from 'express-rate-limit';
 // Rate limiter for contact message submissions to prevent spam
 export const contactLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 10, // Limit each IP to 10 submissions per windowMs
+  max: process.env.NODE_ENV === 'test' ? 1000 : 15, // Limit submissions per window
   standardHeaders: true,
   legacyHeaders: false,
   message: {
@@ -15,7 +15,7 @@ export const contactLimiter = rateLimit({
 // Rate limiter for admin login attempts to prevent brute force attacks
 export const loginLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 10, // Limit each IP to 10 login attempts per windowMs
+  max: process.env.NODE_ENV === 'test' ? 1000 : 15, // Limit login attempts per window
   standardHeaders: true,
   legacyHeaders: false,
   message: {

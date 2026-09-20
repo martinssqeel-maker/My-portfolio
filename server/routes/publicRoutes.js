@@ -6,14 +6,14 @@ import crypto from 'crypto';
 const router = Router();
 
 // GET /api/projects - Retrieve active projects
-router.get('/projects', (req, res) => {
+router.get('/projects', async (req, res) => {
   try {
-    const projects = db.prepare(`
-      SELECT id, title, slug, description, detailedDescription, technologies,
-             imageUrl, liveUrl, githubUrl, featured, displayOrder, createdAt
+    const projects = await db.all(`
+      SELECT "id", "title", "slug", "description", "detailedDescription", "technologies",
+             "imageUrl", "liveUrl", "githubUrl", "featured", "displayOrder", "createdAt"
       FROM projects
-      ORDER BY displayOrder ASC, createdAt DESC
-    `).all();
+      ORDER BY "displayOrder" ASC, "createdAt" DESC
+    `);
 
     // Parse JSON technologies array
     const formatted = projects.map((p) => {
@@ -44,11 +44,12 @@ router.get('/projects', (req, res) => {
 });
 
 // GET /api/projects/:slug - Retrieve single project
-router.get('/projects/:slug', (req, res) => {
+router.get('/projects/:slug', async (req, res) => {
   try {
-    const project = db.prepare(`
-      SELECT * FROM projects WHERE slug = ? OR id = ?
-    `).get(req.params.slug, req.params.slug);
+    const project = await db.get(
+      'SELECT * FROM projects WHERE "slug" = ? OR "id" = ?',
+      [req.params.slug, req.params.slug]
+    );
 
     if (!project) {
       return res.status(404).json({
@@ -82,13 +83,13 @@ router.get('/projects/:slug', (req, res) => {
 });
 
 // GET /api/skills - Retrieve verified skills
-router.get('/skills', (req, res) => {
+router.get('/skills', async (req, res) => {
   try {
-    const skills = db.prepare(`
-      SELECT id, name, category, level, note, displayOrder, createdAt
+    const skills = await db.all(`
+      SELECT "id", "name", "category", "level", "note", "displayOrder", "createdAt"
       FROM skills
-      ORDER BY displayOrder ASC, name ASC
-    `).all();
+      ORDER BY "displayOrder" ASC, "name" ASC
+    `);
 
     // Group by category for convenience
     const grouped = skills.reduce((acc, skill) => {
@@ -114,14 +115,14 @@ router.get('/skills', (req, res) => {
 });
 
 // GET /api/experience - Retrieve verified experience & SIWES
-router.get('/experience', (req, res) => {
+router.get('/experience', async (req, res) => {
   try {
-    const experiences = db.prepare(`
-      SELECT id, title, organization, institution, description,
-             startDate, endDate, contributions, skillsApplied, displayOrder, createdAt
+    const experiences = await db.all(`
+      SELECT "id", "title", "organization", "institution", "description",
+             "startDate", "endDate", "contributions", "skillsApplied", "displayOrder", "createdAt"
       FROM experience
-      ORDER BY displayOrder ASC, createdAt DESC
-    `).all();
+      ORDER BY "displayOrder" ASC, "createdAt" DESC
+    `);
 
     const formatted = experiences.map((exp) => {
       let contributions = [];
@@ -160,7 +161,7 @@ router.get('/experience', (req, res) => {
 });
 
 // POST /api/contact - Real contact message submission with validation & rate limit
-router.post('/contact', contactLimiter, (req, res) => {
+router.post('/contact', contactLimiter, async (req, res) => {
   try {
     let { name, email, subject, message } = req.body;
 
@@ -197,11 +198,12 @@ router.post('/contact', contactLimiter, (req, res) => {
       return res.status(400).json({ success: false, error: 'Please enter a valid email address.' });
     }
 
-    // 4. Duplicate prevention (prevent identical message in last 60 seconds)
-    const recentDuplicate = db.prepare(`
-      SELECT id FROM contact_messages
-      WHERE email = ? AND message = ? AND createdAt > datetime('now', '-1 minute')
-    `).get(email, message);
+    // 4. Duplicate prevention (prevent identical message in last 60 seconds - ANSI standard timestamp comparison)
+    const cutoff = new Date(Date.now() - 60 * 1000).toISOString();
+    const recentDuplicate = await db.get(
+      'SELECT "id" FROM contact_messages WHERE "email" = ? AND "message" = ? AND "createdAt" > ?',
+      [email, message, cutoff]
+    );
 
     if (recentDuplicate) {
       return res.status(429).json({
@@ -214,10 +216,10 @@ router.post('/contact', contactLimiter, (req, res) => {
     const id = `msg_${crypto.randomBytes(8).toString('hex')}`;
     const now = new Date().toISOString();
 
-    db.prepare(`
-      INSERT INTO contact_messages (id, name, email, subject, message, status, createdAt, updatedAt)
+    await db.run(`
+      INSERT INTO contact_messages ("id", "name", "email", "subject", "message", "status", "createdAt", "updatedAt")
       VALUES (?, ?, ?, ?, ?, 'unread', ?, ?)
-    `).run(id, name, email, subject, message, now, now);
+    `, [id, name, email, subject, message, now, now]);
 
     res.status(201).json({
       success: true,

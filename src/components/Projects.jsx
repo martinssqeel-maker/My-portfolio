@@ -162,16 +162,42 @@ export default function Projects() {
 
                 {/* Links & Repository CTAs */}
                 <div className="flex flex-wrap items-center gap-3 pt-4">
-                  <a
-                    href={zapdata.githubUrl || 'https://github.com/martinssqeel-maker/zapdata'}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg text-xs font-mono font-medium text-[#f4f5f8] bg-[#161820] hover:bg-[#1f232e] border border-[#1f222c] transition-all"
-                  >
-                    <GithubIcon size={14} />
-                    <span>GitHub Repository</span>
-                    <ArrowUpRight size={13} className="opacity-60" />
-                  </a>
+                  {zapdata.liveUrl && (
+                    <a
+                      href={zapdata.liveUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg text-xs font-mono font-medium text-emerald-400 bg-[#161820] hover:bg-[#1f232e] border border-emerald-500/30 transition-all"
+                    >
+                      <span>Live Demo</span>
+                      <ArrowUpRight size={13} />
+                    </a>
+                  )}
+
+                  {zapdata.githubUrl ? (
+                    <a
+                      href={zapdata.githubUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg text-xs font-mono font-medium text-[#f4f5f8] bg-[#161820] hover:bg-[#1f232e] border border-[#1f222c] transition-all"
+                    >
+                      <GithubIcon size={14} />
+                      <span>GitHub Repository</span>
+                      <ArrowUpRight size={13} className="opacity-60" />
+                    </a>
+                  ) : (
+                    <a
+                      href={personalData.github}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg text-xs font-mono text-[#9ca3af] hover:text-[#f4f5f8] bg-[#161820] hover:bg-[#1f232e] border border-[#1f222c] transition-all"
+                      title="Direct project repo link pending publication"
+                    >
+                      <GithubIcon size={14} />
+                      <span>GitHub Profile ({personalData.handle})</span>
+                      <ArrowUpRight size={13} className="opacity-60" />
+                    </a>
+                  )}
 
                   <a
                     href="#contact"
@@ -269,17 +295,42 @@ export default function Projects() {
                   ))}
                 </div>
 
-                <div className="pt-2 flex items-center gap-4">
-                  <a
-                    href={campusMarket.githubUrl || 'https://github.com/martinssqeel-maker/campus-marketplace'}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1.5 text-xs font-mono text-[#f4f5f8] hover:text-blue-400 transition-colors"
-                  >
-                    <GithubIcon size={14} />
-                    <span>View Repository</span>
-                    <ArrowUpRight size={13} />
-                  </a>
+                <div className="pt-2 flex flex-wrap items-center gap-4">
+                  {campusMarket.liveUrl && (
+                    <a
+                      href={campusMarket.liveUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1.5 text-xs font-mono text-emerald-400 hover:text-emerald-300 transition-colors"
+                    >
+                      <span>Live Demo</span>
+                      <ArrowUpRight size={13} />
+                    </a>
+                  )}
+                  {campusMarket.githubUrl ? (
+                    <a
+                      href={campusMarket.githubUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1.5 text-xs font-mono text-[#f4f5f8] hover:text-blue-400 transition-colors"
+                    >
+                      <GithubIcon size={14} />
+                      <span>View Repository</span>
+                      <ArrowUpRight size={13} />
+                    </a>
+                  ) : (
+                    <a
+                      href={personalData.github}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1.5 text-xs font-mono text-[#9ca3af] hover:text-[#f4f5f8] transition-colors"
+                      title="Direct project repo link pending publication"
+                    >
+                      <GithubIcon size={14} />
+                      <span>Repo Pending</span>
+                      <ArrowUpRight size={13} />
+                    </a>
+                  )}
                 </div>
               </div>
             </div>
@@ -328,17 +379,42 @@ export default function Projects() {
                   ))}
                 </div>
 
-                <div className="pt-2 flex items-center gap-4">
-                  <a
-                    href={fashionWeb.githubUrl || 'https://github.com/martinssqeel-maker/fashion-web'}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1.5 text-xs font-mono text-[#f4f5f8] hover:text-amber-400 transition-colors"
-                  >
-                    <GithubIcon size={14} />
-                    <span>View Repository</span>
-                    <ArrowUpRight size={13} />
-                  </a>
+                <div className="pt-2 flex flex-wrap items-center gap-4">
+                  {fashionWeb.liveUrl && (
+                    <a
+                      href={fashionWeb.liveUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1.5 text-xs font-mono text-emerald-400 hover:text-emerald-300 transition-colors"
+                    >
+                      <span>Live Demo</span>
+                      <ArrowUpRight size={13} />
+                    </a>
+                  )}
+                  {fashionWeb.githubUrl ? (
+                    <a
+                      href={fashionWeb.githubUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1.5 text-xs font-mono text-[#f4f5f8] hover:text-amber-400 transition-colors"
+                    >
+                      <GithubIcon size={14} />
+                      <span>View Repository</span>
+                      <ArrowUpRight size={13} />
+                    </a>
+                  ) : (
+                    <a
+                      href={personalData.github}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1.5 text-xs font-mono text-[#9ca3af] hover:text-[#f4f5f8] transition-colors"
+                      title="Direct project repo link pending publication"
+                    >
+                      <GithubIcon size={14} />
+                      <span>Repo Pending</span>
+                      <ArrowUpRight size={13} />
+                    </a>
+                  )}
                 </div>
               </div>
 

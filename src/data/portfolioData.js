@@ -9,12 +9,16 @@ export const personalData = {
   name: "Martins Moses",
   shortName: "Martins",
   handle: "martinssqeel-maker",
-  role: "Frontend Developer & Student Builder",
+  role: "Frontend Developer & Practical Web Product Builder",
   status: "Open to software roles, SIWES continuation & collaborations",
   availableForHire: true,
   email: "martinssqeel@gmail.com",
   github: "https://github.com/martinssqeel-maker",
   
+  // Custom domain placeholder (unconfirmed - left editable for when custom domain is acquired)
+  // MANUAL ACTION REQUIRED: Set your custom domain once acquired e.g. "martinsmoses.com" or Vercel URL
+  domain: "",
+
   // MANUAL ACTION REQUIRED: Provide your real WhatsApp and social URLs if desired
   whatsapp: "", // e.g. "https://wa.me/234XXXXXXXXXX"
   twitter: "",  // Optional: e.g. "https://x.com/yourhandle"
@@ -123,8 +127,8 @@ export const personalData = {
         "Interactive wallet balance and simulated order confirmation feedback"
       ],
       technologies: ["React", "JavaScript (ES6+)", "Tailwind CSS", "HTML5 / CSS3", "LocalStorage API"],
-      liveUrl: "https://zapdata.example.com", // [MANUAL ACTION REQUIRED: Provide live hosted URL if deployed]
-      githubUrl: "https://github.com/martinssqeel-maker/zapdata", // [MANUAL ACTION REQUIRED: Confirm exact repo name]
+      liveUrl: "", // [MANUAL ACTION REQUIRED: Provide live hosted URL when deployed]
+      githubUrl: "", // [MANUAL ACTION REQUIRED: Confirm exact repo name when ready]
       hasLiveDemo: true,
       features: [
         { label: "Carrier Coverage", value: "MTN, Airtel, Glo, 9mobile" },
@@ -151,8 +155,8 @@ export const personalData = {
         "Lightweight UI tailored for low-bandwidth campus network connections"
       ],
       technologies: ["React", "JavaScript", "Tailwind CSS", "Responsive Design"],
-      liveUrl: "https://campus-market.example.com", // [MANUAL ACTION REQUIRED: Provide live URL if hosted]
-      githubUrl: "https://github.com/martinssqeel-maker/campus-marketplace", // [MANUAL ACTION REQUIRED: Confirm repo name]
+      liveUrl: "", // [MANUAL ACTION REQUIRED: Provide live URL when hosted]
+      githubUrl: "", // [MANUAL ACTION REQUIRED: Confirm repo name when ready]
       hasLiveDemo: true,
       features: [
         { label: "Primary Use Case", value: "Student textbooks & hostel gear" },
@@ -178,8 +182,8 @@ export const personalData = {
         "Optimized image containers for smooth mobile scrolling"
       ],
       technologies: ["React", "HTML5", "CSS3", "JavaScript"],
-      liveUrl: "https://fashion-showcase.example.com", // [MANUAL ACTION REQUIRED: Provide live URL if hosted]
-      githubUrl: "https://github.com/martinssqeel-maker/fashion-web", // [MANUAL ACTION REQUIRED: Confirm repo name]
+      liveUrl: "", // [MANUAL ACTION REQUIRED: Provide live URL when hosted]
+      githubUrl: "", // [MANUAL ACTION REQUIRED: Confirm repo name when ready]
       hasLiveDemo: true,
       features: [
         { label: "Design Style", value: "Editorial & minimalist" },

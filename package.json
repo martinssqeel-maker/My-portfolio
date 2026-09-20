@@ -10,6 +10,9 @@
     "build": "vite build",
     "start": "node server/index.js",
     "seed": "node server/db/seed.js",
+    "db:init": "node server/db/seed.js",
+    "test:db": "node scripts/test-db.js",
+    "test:api": "node scripts/test-api.js",
     "lint": "oxlint",
     "preview": "vite preview"
   },
@@ -25,12 +28,14 @@
     "express-rate-limit": "^8.7.0",
     "jsonwebtoken": "^9.0.3",
     "lucide-react": "^1.16.0",
+    "pg": "^8.23.0",
     "prisma": "^6.19.3",
     "react": "^19.2.8",
     "react-dom": "^19.2.8"
   },
   "devDependencies": {
     "@tailwindcss/vite": "^4.0.0",
+    "@types/pg": "^8.23.1",
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.7",
     "@vitejs/plugin-react": "^6.1.1",
